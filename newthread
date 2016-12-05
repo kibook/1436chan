@@ -27,6 +27,7 @@ else
 		then
 			printf "3ERROR: Failed to archive or remove thread!	(fake)	NULL	0\r\n"
 			printf "1Return	$CHAN_ROOT	$SERVER_HOST	$SERVER_PORT\r\n"
+			exit
 		fi
 	fi
 
