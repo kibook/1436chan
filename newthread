@@ -25,15 +25,21 @@ else
 	fi
 
 	mkdir $post
-	#echo "$comment" > $post/$post
-	echo "$comment" > $post/gophertag
 
-	ln template_gophermap $post/gophermap
-	ln template_post $post/post
-	ln template_postres $post/postres
-	ln template_posthttp $post/posthttp
-	ln template_postfile $post/postfile
+	if [ -e $post ]
+	then
+		echo "$comment" > $post/gophertag
 
-	printf "iThread created successfully!	(fake)	NULL	0\r\n"
-	printf "1View thread	$CHAN_ROOT/$post	$SERVER_HOST	$SERVER_PORT\r\n"
+		ln template_gophermap $post/gophermap
+		ln template_post $post/post
+		ln template_postres $post/postres
+		ln template_posthttp $post/posthttp
+		ln template_postfile $post/postfile
+
+		printf "iThread created successfully!	(fake)	NULL	0\r\n"
+		printf "1View thread	$CHAN_ROOT/$post	$SERVER_HOST	$SERVER_PORT\r\n"
+	else
+		printf "3Could not create thread.	(fake)	NULL	0\r\n"
+		printf "1Return	$CHAN_ROOT	$SERVER_HOST	$SERVER_PORT\r\n"
+	fi
 fi
