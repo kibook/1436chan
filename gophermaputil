@@ -1,4 +1,6 @@
 #!/bin/bash
+saveifs="$IFS"
+IFS=''
 cat $1 | while read -r line
 do
 	if [[ "$line" != "#*" ]]
@@ -11,3 +13,4 @@ do
 		fi
 	fi
 done
+IFS="$saveifs"
