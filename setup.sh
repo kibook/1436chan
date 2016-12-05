@@ -77,7 +77,7 @@ echo "LAST_POSTS=$LAST_POSTS" >> params.sh
 echo "MAX_UPLOAD=$MAX_UPLOAD" >> params.sh
 
 # fix links, setup archive
-for thread in $(ls -d [0-9]* 2>/dev/null)
+for thread in $(ls -dt [0-9]* 2>/dev/null)
 do
 	rm -f $thread/post
 	rm -f $thread/postres
@@ -92,7 +92,7 @@ do
 	ln template_postfile $thread/postfile
 done
 
-for thread in $(ls -d sticky_* 2>/dev/null)
+for thread in $(ls -dt sticky_* 2>/dev/null)
 do
 	rm -f $thread/gophermap
 
