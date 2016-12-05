@@ -43,7 +43,7 @@ elif [ $size -gt $MAX_UPLOAD ]
 then
 	printf "3File too large (max $MAX_UPLOAD bytes)	(fake)	NULL	0\r\n"
 else
-	fname="file_$post.$ext"
+	fname="file_$post"
 
 	curl -L "$url" > "$fname"
 
@@ -59,7 +59,7 @@ else
 		*) type=9;;
 	esac
 
-	printf "$type$dis	$CHAN_ROOT/$id/file_$post.$ext	$SERVER_HOST	$SERVER_PORT\r\n" > $post
+	printf "$type$dis	$CHAN_ROOT/$id/$fname	$SERVER_HOST	$SERVER_PORT\r\n" > $post
 
 	printf "iPost successful!	(fake)	NULL	0\r\n"
 fi
