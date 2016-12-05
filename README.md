@@ -1,5 +1,10 @@
 This file pertains to the Github repository of 1436chan, for general information see README.
 
+# 1436chan home
+gopher://khzai.net/1/chan
+
+http://khzai.net/1/chan (via [Bucky](https://github.com/kibook/bucky))
+
 # Installing (via github)
 
 1. cd to a directory on your Gopher server
