@@ -1,0 +1,83 @@
+#!/bin/bash
+
+cd "${0%/*}"
+
+source ./params.sh
+
+if [ -e "motd" ]
+then
+	./gophermaputil <<EOF
+$(cat motd)
+EOF
+	printf "i\t(fake)\tNULL\t0\r\n"
+fi
+
+for sticky in $(ls -td sticky_* 2>/dev/null)
+do
+	printf "1[sticky] $(cat $sticky/gophertag)\t$CHAN_ROOT/$sticky\t$SERVER_HOST\t$SERVER_PORT\r\n"
+done
+
+if [ $(ls sticky_* 2>/dev/null | wc -l) -gt 0 ]
+then
+	printf "i\t(fake)\tNULL\t0\r\n"
+fi
+
+./gophermaputil <<EOF
+7New thread	$CHAN_ROOT/newthread	$SERVER_HOST	$SERVER_PORT
+
+EOF
+
+for thread in $(ls -td [0-9]* 2>/dev/null)
+do
+	cd $thread
+
+	lastposts=$(ls [0-9]* | tail -n $LAST_POSTS)
+	npost=$(ls [0-9]* | wc -l)
+	nlast=$(echo "$lastposts" | wc -l)
+
+	if [[ $npost -gt 0 || "$SHOW_EMPTY_THREADS" = "y" ]]
+	then
+		printf "1[@$thread] $(cat gophertag) ($npost "
+		if [ $npost -eq 1 ]
+		then
+			printf "post"
+		else
+			printf "posts"
+		fi
+		printf ")\t$CHAN_ROOT/$thread\t$SERVER_HOST\t$SERVER_PORT\r\n"
+
+		i=$((npost-nlast+1))
+		for post in $lastposts
+		do
+			printf "i__[#%.3d $(date -d @$post +"$DATE_FORMAT") @$post]_______________________\t(fake)\tNULL\t0\r\n" "$i"
+			lastcomment=$(cat $post)
+			if echo "$lastcomment" | grep -q "	"
+			then
+				printf "$lastcomment\r\n"
+			else
+				lastcomment=`echo "$lastcomment" | fmt -67`
+				while read line
+				do
+					printf "i$line\t(fake)\tNULL\t0\r\n"
+				done < <(echo "$lastcomment")
+			fi
+			printf "i\t(fake)\tNULL\t0\r\n"
+			i=$((i+1))
+		done
+
+		if [ $LAST_POSTS -gt 0 ]
+		then
+			printf "i\t(fake)\tNULL\t0\r\n"
+		fi
+	fi
+
+	cd ..
+done
+
+if [ ! -z "$CHAN_ARCHIVE" ]
+then
+./gophermaputil <<EOF
+
+1Archive	$CHAN_ROOT/$CHAN_ARCHIVE	$SERVER_HOST	$SERVER_PORT
+EOF
+fi

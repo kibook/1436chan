@@ -1,0 +1,28 @@
+#!/bin/bash
+
+cd "${0%/*}"
+
+if [ ! -e "../params.sh" ]
+then
+	exit
+fi
+
+source ../params.sh
+
+id=$(basename $(pwd))
+
+comment=$(echo "$@" | cut -c1-$MAX_POSTLEN)
+post=$(date +%s)
+
+if [[ "$comment" = "" ]]
+then
+	printf "3Post failed.	(fake)	NULL	0\r\n"
+	printf "i	(fake)	NULL	0\r\n"
+	printf "iYou must post a comment.	(fake)	NULL	0\r\n"
+else
+	echo "$comment" > $post
+
+	printf "iPost successful!	(fake)	NULL	0\r\n"
+fi
+
+printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"

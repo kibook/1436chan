@@ -1,0 +1,148 @@
+DEPENDENCIES
+_____________________________________________________________________
+    
+    Bash and core utils
+
+
+INSTALLING/UPGRADING
+_____________________________________________________________________
+
+    1. Extract chan.tar.gz to the folder that will be the root of
+   your chan
+
+    2. Run sh setup.sh
+
+
+SETUP OPTIONS
+_____________________________________________________________________
+
+    Running sh setup.sh will prompt you for several options,
+    which are stored in params.sh. This section outlines what
+    each of these options means:
+
+    CHAN_ROOT
+        This is the root selector of your board.
+
+    MAX_THREADS
+        The maximum number of threads allowed on the board. When
+        MAX_THREADS threads already exist and a user creates a
+        new thread, the oldest thread (in terms of last updated)
+        is either archived or deleted (see CHAN_ARCHIVE below).
+
+    MAX_TITLELEN
+        The maximum characters allowed in a thread
+        title. Additional characters are truncated.
+
+    MAX_POSTLEN
+        The maximum characters allowed in a post. Additional
+        characters are truncated.
+
+    CHAN_ARCHIVE
+        The folder where archived threads are stored. If blank,
+        old threads are deleted instead of archived.
+
+    DATE_FORMAT
+        The format for displaying the date on posts and threads.
+
+    SHOW_EMPTY_THREADS
+        Either 'y' or 'n'. If 'y', then threads with 0 posts
+        are shown on the main menu of the board. Otherwise, such
+        empty threads are hidden until they have at least 1 post,
+        requiring thread creators to supply an opening post (OP)
+        after creating their thread.
+
+    LAST_POSTS
+        Up to LAST_POSTS posts are shown under each thread on
+        the main menu.
+
+    MAX_UPLOAD
+        Maximum size of an upload in bytes. If this is > 0 then users
+        are allowed to reply with 'uploaded' files. The users must
+        actually provide a URL to a file which the server downloads
+        to the respective thread directory and then posts a link
+        to it in said thread.
+
+	If this is 0, then uploads are disabled.
+
+	[WARNING]: This means your server may connect to and download
+	from other arbitrary servers. If you are concerned about
+	what connections you make or what kinds of files you are
+	storing on your server, disable this!
+
+
+DELETING A THREAD OR POST
+_____________________________________________________________________
+
+    Deleting a thread or post is as simple as using rm.
+
+    To delete a thread (from the root folder):
+
+        rm -r <thread>
+
+    where <thread> is the id number of the thread (Unix timestamp
+    when it was created).
+
+    To delete a post (from the root folder):
+
+        rm <thread>/<post>
+
+  where <post> is the id number of the post.
+
+
+MESSAGE OF THE DAY
+_____________________________________________________________________
+
+    Create or edit the 'motd' file to add a message of the day
+    to the top of the board.
+
+    Lines in the motd file without TAB characters are turned in
+    to inline text (type i), e.g. the line:
+        Hello world!
+    will become:
+        iHello world!<TAB>(fake)<TAB>NULL<TAB>0<CR><LF>
+    
+    Otherwise they are interpreted as Gopher links, e.g.:
+        IA picture<TAB>/pic<TAB>host<TAB>port
+
+
+STICKIES
+_____________________________________________________________________
+
+    Stickies appear at the top of the board (in order of last
+    update) marked by the prefix [sticky]. Unlike threads stickies
+    will never be deleted or archived unless done so manually by
+    an administrator. The administrator can create new stickies or
+    turn existing threads in to stickies using the scripts below:
+
+  sh newsticky.sh <title>
+      Creates a new open sticky titled <title>. Open stickies
+      can still be replied to by anyone.
+
+  sh newrosticky.sh <title>
+      Creates a new read-only (closed) sticky titled
+      <title>. Closed stickies can only be replied to by an
+      administrator.
+
+  sh makesticky.sh <thread>
+      Turns an existing thread in to an open sticky.
+
+  sh makerosticky.sh <thread>
+      Turns an existing thread in to a closed sticky.
+
+  rm -r sticky_<...>
+      Deletes the sticky with id <...>.
+
+  sh post.sh sticky_<...>
+      Add a post to the sticky with id <...>.
+
+
+MULTIPLE BOARDS
+_____________________________________________________________________
+
+  There is no built-in feature for this, but if you wish to have
+  multiple boards (representing certain subjects for discussion
+  perhaps) you may simply create a parent directory for the overall
+  "chan" and then perform the INSTALLING/UPGRADING procedure in
+  multiple subdirectories, one for each board. Finally, create
+  your own gophermap in the parent directory to customise the
+  list of boards.

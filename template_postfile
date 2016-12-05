@@ -1,0 +1,62 @@
+#!/bin/bash
+
+cd "${0%/*}"
+
+if [ ! -e ../params.sh ]
+then
+	exit
+fi
+
+source ../params.sh
+
+if [ ! $MAX_UPLOAD -gt 0 ]
+then
+	printf "3Uploads are disabled	(fake)	NULL	0\r\n"
+	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+	exit
+fi
+
+id=$(basename $(pwd))
+
+post=$(date +%s)
+
+ext="${1##*.}"
+url="$1"
+dis="${@:2}"
+
+if [ ! "$dis" ]
+then
+	dis="$url"
+fi
+
+size=$(curl -L -sI "$url" | grep "Content-Length" | awk '{print $2}' | tr -d '\r')
+
+if [ $size -lt 1 ]
+then
+	printf "3Unable to retrieve file size	(fake)	NULL	0\r\n"
+elif [ $size -gt $MAX_UPLOAD ]
+then
+	printf "3File too large (max $MAX_UPLOAD bytes)	(fake)	NULL	0\r\n"
+else
+	fname="file_$post.$ext"
+
+	curl -L "$url" > "$fname"
+
+	mime=$(file -i -b "$fname")
+	mime="${mime%;*}"
+
+	case "$mime" in
+		"image/png")	type=p;;
+		"image/jpeg")	type=I;;
+		"image/gif")	type=g;;
+		"text/plain")	type=0;;
+		"audio/wav")	type=s;;
+		*) type=9;;
+	esac
+
+	printf "$type$dis	$CHAN_ROOT/$id/file_$post.$ext	$SERVER_HOST	$SERVER_PORT\r\n" > $post
+
+	printf "iPost successful!	(fake)	NULL	0\r\n"
+fi
+
+printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"

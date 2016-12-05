@@ -1,0 +1,13 @@
+#!/bin/bash
+cat $1 | while read -r line
+do
+	if [[ "$line" != "#*" ]]
+	then
+		if echo "$line" | grep -q "	"
+		then
+			printf "$line\r\n"
+		else
+			printf "i$line\t(fake)\tNULL\t0\r\n"
+		fi
+	fi
+done

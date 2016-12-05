@@ -1,0 +1,39 @@
+#!/bin/bash
+
+cd "${0%/*}"
+
+source ./params.sh
+
+comment=$(echo "$@" | cut -c1-$MAX_TITLELEN)
+post=$(date +%s)
+
+if [ "$comment" = "" ]
+then
+	printf "3Thread creation failed.	(fake)	NULL	0\r\n"
+	printf "iYou must post a comment.	(fake)	NULL	0\r\n"
+else
+	if [ $(ls -d [0-9]* 2>/dev/null | wc -l) -ge $MAX_THREADS ]
+	then
+		old=$(ls -d -t [0-9]* 2>/dev/null | tail -n 1)
+
+		if [ ! -z "$CHAN_ARCHIVE" ]
+		then
+			sh archive.sh $old
+		else
+			rm -r $old
+		fi
+	fi
+
+	mkdir $post
+	#echo "$comment" > $post/$post
+	echo "$comment" > $post/gophertag
+
+	ln template_gophermap $post/gophermap
+	ln template_post $post/post
+	ln template_postres $post/postres
+	ln template_posthttp $post/posthttp
+	ln template_postfile $post/postfile
+
+	printf "iThread created successfully!	(fake)	NULL	0\r\n"
+	printf "1View thread	$CHAN_ROOT/$post	$SERVER_HOST	$SERVER_PORT\r\n"
+fi

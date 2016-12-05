@@ -1,0 +1,40 @@
+#!/bin/bash
+
+cd "${0%/*}"
+
+if [ ! -e "../params.sh" ]
+then
+	exit
+fi
+
+source ../params.sh
+
+id=$(basename $(pwd))
+
+uri=$(echo "$1" | cut -c1-$MAX_POSTLEN)
+display="${@:2}"
+
+if echo "$uri" | grep -v -e '^.*://.*'
+then
+	uri="http://$uri"
+fi
+
+if [ ! "$display" ]
+then
+	display="$uri"
+fi
+
+post=$(date +%s)
+
+if [[ ! "$uri" ]]
+then
+	printf "3Post failed.	(fake)	NULL	0\r\n"
+	printf "i	(fake)	NULL	0\r\n"
+	printf "You must post an HTTP link.	(fake)	NULL	0\r\n"
+else
+	echo "h$display	URL:$uri	$SERVER_HOST	$SERVER_PORT" > $post
+
+	printf "iPost successful!	(fake)	NULL	0\r\n"
+fi
+
+printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"

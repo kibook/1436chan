@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Convert a Gopher URI to a Gopher 'link' (for a menu)
+
+# Usage: guri URI DISPLAY
+# URI: The Gopher URI to convert
+# DISPLAY: The display string for the link
+
+regex='(gopher:\/\/)?([^\/:]+)(:([0-9]+))?\/?((.)(.*)?)?'
+
+protocol=$(echo "$1" | sed -r "s/$regex/\1/")
+type=$(echo "$1" | sed -r "s/$regex/\6/")
+selector=$(echo "$1" | sed -r "s/$regex/\7/")
+host=$(echo "$1" | sed -r "s/$regex/\2/")
+port=$(echo "$1" | sed -r "s/$regex/\3/")
+display="$2"
+
+if [[ ! "$type" ]]; then type=1; fi
+if [[ ! "$selector" ]]; then selector=/; fi
+if [[ ! "$port" ]]; then port=70; fi
+
+if [[ ! "$host" || ! "$display" || "$host" == "$protocol" ]]
+then
+	exit
+fi
+
+printf "$type$display	$selector	$host	$port\r\n"
