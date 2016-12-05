@@ -34,7 +34,12 @@ then
 else
 	echo "h$display	URL:$uri	$SERVER_HOST	$SERVER_PORT" > $post
 
-	printf "iPost successful!	(fake)	NULL	0\r\n"
+	if [ -e $post ]
+	then
+		printf "iPost successful!	(fake)	NULL	0\r\n"
+	else
+		printf "3Could not post.	(fake)	NULL	0\r\n"
+	fi
 fi
 
 printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
