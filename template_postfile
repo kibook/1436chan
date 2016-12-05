@@ -2,6 +2,11 @@
 
 cd "${0%/*}"
 
+if [ ! "$@" ]
+then
+	exit
+fi
+
 if [ ! -e ../params.sh ]
 then
 	exit
