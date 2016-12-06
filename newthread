@@ -32,6 +32,7 @@ else
 	fi
 
 	mkdir $post
+	chmod g+w $post
 
 	if [ -e $post ]
 	then
