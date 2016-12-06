@@ -47,9 +47,7 @@ _____________________________________________________________________
     SHOW_EMPTY_THREADS
         Either 'y' or 'n'. If 'y', then threads with 0 posts
         are shown on the main menu of the board. Otherwise, such
-        empty threads are hidden until they have at least 1 post,
-        requiring thread creators to supply an opening post (OP)
-        after creating their thread.
+        empty threads are hidden until they have at least 1 post.
 
     LAST_POSTS
         Up to LAST_POSTS posts are shown under each thread on
