@@ -134,3 +134,8 @@ then
 		ln template_archive_gophermap $thread/gophermap
 	done
 fi
+
+# permissions
+chmod o+w .
+chmod o+w template_*
+chmod o+w $CHAN_ARCHIVE
