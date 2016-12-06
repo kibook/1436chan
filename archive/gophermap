@@ -10,7 +10,7 @@ source ../params.sh
 Archived threads:
 EOF
 
-for thread in $(ls -rd [0-9]*)
+for thread in $(ls -rd [0-9]* 2>/dev/null)
 do
 	printf "1$(cat $thread/gophertag)\t$CHAN_ROOT/$CHAN_ARCHIVE/$thread\t$SERVER_HOST\t$SERVER_PORT\r\n"
 done
