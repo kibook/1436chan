@@ -137,5 +137,7 @@ fi
 
 # permissions
 chmod g+w .
+chmod g+s .
 chmod g+w template_*
 chmod g+w $CHAN_ARCHIVE
+chmod g+s $CHAN_ARCHIVE
