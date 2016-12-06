@@ -164,3 +164,6 @@ _____________________________________________________________________
 
   now both server (the user running the Gopher server) and bucky can
   write.
+
+  After modifying permissions, run:
+      sh setup.sh
