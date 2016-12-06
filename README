@@ -146,3 +146,23 @@ _____________________________________________________________________
   multiple subdirectories, one for each board. Finally, create
   your own gophermap in the parent directory to customise the
   list of boards.
+
+
+PERMISSIONS
+_____________________________________________________________________
+
+  If you need multiple users to have write permissions to your chan
+  (for example, when using Bucky running as a different user than the
+  one running the Gopher server), it is recommended you create a
+  group for these users and give group ownership to the chan
+  directory. For example:
+
+      chown -R server:1436chan /var/gopher/chan
+
+  will set group ownership of your chan folder to '1436chan'. Then:
+
+      usermod -aG server 1436chan
+      usermod -aG bucky 1436chan
+
+  now both server (the user running the Gopher server) and bucky can
+  write.
