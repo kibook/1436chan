@@ -26,7 +26,7 @@ i=1
 
 for file in $(ls [0-9]* 2>/dev/null)
 do
-	printf "i__[#%.3d $(date -d @$file +"$DATE_FORMAT") @$file]_______________________\t(fake)\tNULL\t0\r\n" "$i"
+	printf "i__[#%.3d $(date -d @$file +"$DATE_FORMAT") @$file]_______________________\tfake\t(NULL)\t0\r\n" "$i"
 	comment=$(cat $file)
 	if echo "$comment" | grep -q "	"
 	then
@@ -35,9 +35,9 @@ do
 		comment=$(echo "$comment" | fmt -67)
 		while read line
 		do
-			printf "i$line\t(fake)\tNULL\t0\r\n"
+			printf "i$line\tfake\t(NULL)\t0\r\n"
 		done < <(echo "$comment")
 	fi
-	printf "i\t(fake)\tNULL\t0\r\n"
+	printf "i\tfake\t(NULL)\t0\r\n"
 	i=$((i+1))
 done

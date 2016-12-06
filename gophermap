@@ -12,7 +12,7 @@ fi
 if [ -e "motd" ]
 then
 	cat motd | ./gophermaputil
-	printf "i	(fake)	NULL	0\r\n"
+	printf "i	fake	(NULL)	0\r\n"
 fi
 
 for sticky in $(ls -td sticky_* 2>/dev/null)
@@ -22,7 +22,7 @@ done
 
 if [ $(ls sticky_* 2>/dev/null | wc -l) -gt 0 ]
 then
-	printf "i	(fake)	NULL	0\r\n"
+	printf "i	fake	(NULL)	0\r\n"
 fi
 
 ./gophermaputil <<EOF
@@ -52,7 +52,7 @@ do
 		i=$((npost-nlast+1))
 		for post in $lastposts
 		do
-			printf "i__[#%.3d $(date -d @$post +"$DATE_FORMAT") @$post]_______________________\t(fake)\tNULL\t0\r\n" "$i"
+			printf "i__[#%.3d $(date -d @$post +"$DATE_FORMAT") @$post]_______________________\tfake\t(NULL)\t0\r\n" "$i"
 			lastcomment=$(cat $post)
 			if echo "$lastcomment" | grep -q "	"
 			then
@@ -61,16 +61,16 @@ do
 				lastcomment=`echo "$lastcomment" | fmt -67`
 				while read line
 				do
-					printf "i$line	(fake)	NULL	0\r\n"
+					printf "i$line	fake	(NULL)	0\r\n"
 				done < <(echo "$lastcomment")
 			fi
-			printf "i	(fake)	NULL	0\r\n"
+			printf "i	fake	(NULL)	0\r\n"
 			i=$((i+1))
 		done
 
 		if [ $LAST_POSTS -gt 0 ]
 		then
-			printf "i	(fake)	NULL	0\r\n"
+			printf "i	fake	(NULL)	0\r\n"
 		fi
 	fi
 
@@ -79,6 +79,6 @@ done
 
 if [ ! -z "$CHAN_ARCHIVE" ]
 then
-	printf "i	(fake)	NULL	0\r\n"
+	printf "i	fake	(NULL)	0\r\n"
 	printf "1Archive	$CHAN_ROOT/$CHAN_ARCHIVE	$SERVER_HOST	$SERVER_PORT\r\n"
 fi

@@ -9,7 +9,7 @@ do
 		then
 			printf "$line\r\n"
 		else
-			printf "i$line\t(fake)\tNULL\t0\r\n"
+			printf "i$line\tfake\t(NULL)\t0\r\n"
 		fi
 	fi
 done

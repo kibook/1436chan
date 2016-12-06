@@ -99,7 +99,7 @@ _____________________________________________________________________
     to inline text (type i), e.g. the line:
         Hello world!
     will become:
-        iHello world!<TAB>(fake)<TAB>NULL<TAB>0<CR><LF>
+        iHello world!<TAB>fake<TAB>(NULL)<TAB>0<CR><LF>
     
     Otherwise they are interpreted as Gopher links, e.g.:
         IA picture<TAB>/pic<TAB>host<TAB>port

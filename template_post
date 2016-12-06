@@ -16,17 +16,17 @@ post=$(date +%s)
 
 if [[ "$comment" = "" ]]
 then
-	printf "3Post failed.	(fake)	NULL	0\r\n"
-	printf "i	(fake)	NULL	0\r\n"
-	printf "iYou must post a comment.	(fake)	NULL	0\r\n"
+	printf "3Post failed.	fake	(NULL)	0\r\n"
+	printf "i	fake	(NULL)	0\r\n"
+	printf "iYou must post a comment.	fake	(NULL)	0\r\n"
 else
 	echo "$comment" > $post
 
 	if [ -e $post ]
 	then
-		printf "iPost successful!	(fake)	NULL	0\r\n"
+		printf "iPost successful!	fake	(NULL)	0\r\n"
 	else
-		printf "3Could not post.	(fake)	NULL	0\r\n"
+		printf "3Could not post.	fake	(NULL)	0\r\n"
 	fi
 fi
 

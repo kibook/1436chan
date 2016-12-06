@@ -16,7 +16,7 @@ source ../params.sh
 
 if [ ! $MAX_UPLOAD -gt 0 ]
 then
-	printf "3Uploads are disabled	(fake)	NULL	0\r\n"
+	printf "3Uploads are disabled	fake	(NULL)	0\r\n"
 	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
 	exit
 fi
@@ -38,10 +38,10 @@ size=$(curl -L -sI "$url" | grep "Content-Length" | awk '{print $2}' | tr -d '\r
 
 if [ $size -lt 1 ]
 then
-	printf "3Unable to retrieve file size	(fake)	NULL	0\r\n"
+	printf "3Unable to retrieve file size	fake	(NULL)	0\r\n"
 elif [ $size -gt $MAX_UPLOAD ]
 then
-	printf "3File too large (max $MAX_UPLOAD bytes)	(fake)	NULL	0\r\n"
+	printf "3File too large (max $MAX_UPLOAD bytes)	fake	(NULL)	0\r\n"
 else
 	fname="file_$post"
 
@@ -63,9 +63,9 @@ else
 
 	if [ -e $post ]
 	then
-		printf "iPost successful!	(fake)	NULL	0\r\n"
+		printf "iPost successful!	fake	(NULL)	0\r\n"
 	else
-		printf "3Could not post.	(fake)	NULL	0\r\n"
+		printf "3Could not post.	fake	(NULL)	0\r\n"
 	fi
 fi
 

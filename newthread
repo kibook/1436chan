@@ -9,8 +9,8 @@ post=$(date +%s)
 
 if [ "$comment" = "" ]
 then
-	printf "3Thread creation failed.	(fake)	NULL	0\r\n"
-	printf "iYou must post a comment.	(fake)	NULL	0\r\n"
+	printf "3Thread creation failed.	fake	(NULL)	0\r\n"
+	printf "iYou must post a comment.	fake	(NULL)	0\r\n"
 else
 	if [ $(ls -d [0-9]* 2>/dev/null | wc -l) -ge $MAX_THREADS ]
 	then
@@ -25,7 +25,7 @@ else
 
 		if [ -e $old ]
 		then
-			printf "3ERROR: Failed to archive or remove thread!	(fake)	NULL	0\r\n"
+			printf "3ERROR: Failed to archive or remove thread!	fake	(NULL)	0\r\n"
 			printf "1Return	$CHAN_ROOT	$SERVER_HOST	$SERVER_PORT\r\n"
 			exit
 		fi
@@ -43,10 +43,10 @@ else
 		ln template_posthttp $post/posthttp
 		ln template_postfile $post/postfile
 
-		printf "iThread created successfully!	(fake)	NULL	0\r\n"
+		printf "iThread created successfully!	fake	(NULL)	0\r\n"
 		printf "1View thread	$CHAN_ROOT/$post	$SERVER_HOST	$SERVER_PORT\r\n"
 	else
-		printf "3Could not create thread.	(fake)	NULL	0\r\n"
+		printf "3Could not create thread.	fake	(NULL)	0\r\n"
 		printf "1Return	$CHAN_ROOT	$SERVER_HOST	$SERVER_PORT\r\n"
 	fi
 fi
