@@ -141,3 +141,5 @@ chmod g+s .
 chmod g+w template_*
 chmod g+w $CHAN_ARCHIVE
 chmod g+s $CHAN_ARCHIVE
+chmod g+w [0-9]*
+chmod g+w sticky_[0-9]*
