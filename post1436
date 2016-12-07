@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Usage:
 #   1436post <url> <file> <display>
@@ -7,5 +7,7 @@
 #    <file>  The path of the file to upload
 # <display>  Optional custom display string.
 
+gurl="$1"
 data=$(cat "$2" | base64 -w 0)
-curl "$1/postfileb64?$data $3"
+disp="$3"
+curl "$gurl/postfileb64?$data $disp"

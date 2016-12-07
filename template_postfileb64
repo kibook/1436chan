@@ -26,7 +26,7 @@ id=$(basename $(pwd))
 post=$(date +%s)
 
 data="$1"
-disp="$2"
+disp="${@:2}"
 
 if [ ! "$disp" ]
 then
