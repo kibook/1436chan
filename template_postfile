@@ -25,7 +25,7 @@ id=$(basename $(pwd))
 
 post=$(date +%s)
 
-ext="${1##*.}"
+ext=$(echo "$1" | sed -r 's/.*\.([A-Za-z0-9]+).*/\1/')
 url="$1"
 dis="${@:2}"
 
@@ -43,7 +43,12 @@ elif [ $size -gt $MAX_UPLOAD ]
 then
 	printf "3File too large (max $MAX_UPLOAD bytes)	fake	(NULL)	0\r\n"
 else
-	fname="file_$post"
+	if [[ "$ext" == "$url" ]]
+	then
+		fname="file_$post"
+	else
+		fname="file_$post.$ext"
+	fi
 
 	curl -L "$url" > "$fname"
 
