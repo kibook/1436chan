@@ -24,47 +24,50 @@ else
 	DEFAULT_MAX_UPLOAD=1000000
 fi
 
-read -p "Selector for the board [$DEFAULT_CHAN_ROOT]: " CHAN_ROOT
-read -p "Max threads [$DEFAULT_MAX_THREADS]: " MAX_THREADS
-read -p "Max thread title length [$DEFAULT_MAX_TITLELEN]: " MAX_TITLELEN
-read -p "Max post length [$DEFAULT_MAX_POSTLEN]: " MAX_POSTLEN
-
-read -p "Enable archive? (y/n) [y]: " ENABLE_ARCHIVE
-
-if [ ! "$ENABLE_ARCHIVE" = "n" ]
+if [ "$1" != "-quick" ]
 then
-	read -p "Archive folder [$DEFAULT_CHAN_ARCHIVE]: " CHAN_ARCHIVE
-fi
+	read -p "Selector for the board [$DEFAULT_CHAN_ROOT]: " CHAN_ROOT
+	read -p "Max threads [$DEFAULT_MAX_THREADS]: " MAX_THREADS
+	read -p "Max thread title length [$DEFAULT_MAX_TITLELEN]: " MAX_TITLELEN
+	read -p "Max post length [$DEFAULT_MAX_POSTLEN]: " MAX_POSTLEN
 
-read -p "Date format [$DEFAULT_DATE_FORMAT]: " DATE_FORMAT
-read -p "Show empty threads (y/n) [$DEFAULT_SHOW_EMPTY_THREADS]: " SHOW_EMPTY_THREADS
-read -p "Last posts to show [$DEFAULT_LAST_POSTS]: " LAST_POSTS
-read -p "Enable uploading of files? (y/n) [y]: " ENABLE_UPLOAD
+	read -p "Enable archive? (y/n) [y]: " ENABLE_ARCHIVE
 
-if [ ! "$ENABLE_UPLOAD" = "n" ]
-then
-	read -p "Maximum uploaded file size (bytes) [$DEFAULT_MAX_UPLOAD]: " MAX_UPLOAD
-else
-	MAX_UPLOAD=0
-fi
-
-if [ -z "$CHAN_ROOT" ]; then CHAN_ROOT="$DEFAULT_CHAN_ROOT"; fi
-if [ -z "$MAX_THREADS" ]; then MAX_THREADS=$DEFAULT_MAX_THREADS; fi
-if [ -z "$MAX_TITLELEN" ]; then MAX_TITLELEN=$DEFAULT_MAX_TITLELEN; fi
-if [ -z "$MAX_POSTLEN" ]; then MAX_POSTLEN=$DEFAULT_MAX_POSTLEN; fi
-
-if [ ! "$ENABLE_ARCHIVE" = "n" ]
-then
-	if [ -z "$CHAN_ARCHIVE" ]
+	if [ ! "$ENABLE_ARCHIVE" = "n" ]
 	then
-		CHAN_ARCHIVE=$DEFAULT_CHAN_ARCHIVE
+		read -p "Archive folder [$DEFAULT_CHAN_ARCHIVE]: " CHAN_ARCHIVE
 	fi
-fi
 
-if [ -z "$DATE_FORMAT" ]; then DATE_FORMAT="$DEFAULT_DATE_FORMAT"; fi
-if [ -z "$SHOW_EMPTY_THREADS" ]; then SHOW_EMPTY_THREADS=$DEFAULT_SHOW_EMPTY_THREADS; fi
-if [ -z "$LAST_POSTS" ]; then LAST_POSTS=$DEFAULT_LAST_POSTS; fi
-if [ -z "$MAX_UPLOAD" ]; then MAX_UPLOAD=$DEFAULT_MAX_UPLOAD; fi
+	read -p "Date format [$DEFAULT_DATE_FORMAT]: " DATE_FORMAT
+	read -p "Show empty threads (y/n) [$DEFAULT_SHOW_EMPTY_THREADS]: " SHOW_EMPTY_THREADS
+	read -p "Last posts to show [$DEFAULT_LAST_POSTS]: " LAST_POSTS
+	read -p "Enable uploading of files? (y/n) [y]: " ENABLE_UPLOAD
+
+	if [ ! "$ENABLE_UPLOAD" = "n" ]
+	then
+		read -p "Maximum uploaded file size (bytes) [$DEFAULT_MAX_UPLOAD]: " MAX_UPLOAD
+	else
+		MAX_UPLOAD=0
+	fi
+
+	if [ -z "$CHAN_ROOT" ]; then CHAN_ROOT="$DEFAULT_CHAN_ROOT"; fi
+	if [ -z "$MAX_THREADS" ]; then MAX_THREADS=$DEFAULT_MAX_THREADS; fi
+	if [ -z "$MAX_TITLELEN" ]; then MAX_TITLELEN=$DEFAULT_MAX_TITLELEN; fi
+	if [ -z "$MAX_POSTLEN" ]; then MAX_POSTLEN=$DEFAULT_MAX_POSTLEN; fi
+
+	if [ ! "$ENABLE_ARCHIVE" = "n" ]
+	then
+		if [ -z "$CHAN_ARCHIVE" ]
+		then
+			CHAN_ARCHIVE=$DEFAULT_CHAN_ARCHIVE
+		fi
+	fi
+
+	if [ -z "$DATE_FORMAT" ]; then DATE_FORMAT="$DEFAULT_DATE_FORMAT"; fi
+	if [ -z "$SHOW_EMPTY_THREADS" ]; then SHOW_EMPTY_THREADS=$DEFAULT_SHOW_EMPTY_THREADS; fi
+	if [ -z "$LAST_POSTS" ]; then LAST_POSTS=$DEFAULT_LAST_POSTS; fi
+	if [ -z "$MAX_UPLOAD" ]; then MAX_UPLOAD=$DEFAULT_MAX_UPLOAD; fi
+fi
 
 echo "CHAN_ROOT=$CHAN_ROOT" > params.sh
 echo "MAX_THREADS=$MAX_THREADS" >> params.sh
