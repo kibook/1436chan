@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Usage:
+#   1436post <url> <file> <display>
+#
+#     <url>  The Gopher URL of the thread, (e.g. gopher://khzai.net/1/chan/123456789)
+#    <file>  The path of the file to upload
+# <display>  Optional custom display string.
+
+data=$(cat "$2" | base64 -w 0)
+curl "$1/postfileb64?$data $3"
