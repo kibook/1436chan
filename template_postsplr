@@ -1,0 +1,40 @@
+#!/bin/bash
+
+cd "${0%/*}"
+
+if [ ! -e "../params.sh" ]
+then
+	exit
+fi
+
+source ../params.sh
+
+id=$(basename $(pwd))
+
+comment="$@"
+len=${#comment}
+post=$(date +%s)
+
+if [[ "$comment" = "" ]]
+then
+	printf "3Post failed.	fake	(NULL)	0\r\n"
+	printf "i	fake	(NULL)	0\r\n"
+	printf "iYou must post a comment.	fake	(NULL)	0\r\n"
+elif [[ $len -gt $MAX_POSTLEN ]]
+then
+	printf "3Post failed.	fake	(NULL)	0\r\n"
+	printf "i	fake	(NULL)	0\r\n"
+	printf "iComment too long ($len/$MAX_POSTLEN)	fake	(NULL)	0\r\n"
+else
+	echo "$comment" > s_$post
+	echo "0*SPOILER*	$CHAN_ROOT/$id/s_$post	$SERVER_HOST	$SERVER_PORT" > $post
+
+	if [ -e $post ]
+	then
+		printf "iPost successful!	fake	(NULL)	0\r\n"
+	else
+		printf "3Could not post.	fake	(NULL)	0\r\n"
+	fi
+fi
+
+printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"

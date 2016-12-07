@@ -69,3 +69,5 @@ if [ $MAX_UPLOAD -gt 0 ]
 then
 	printf "7Upload image/file from URL (max $(($MAX_UPLOAD / 1000)) kB)	$REQUEST/postfile	$SERVER_HOST	$SERVER_PORT\r\n"
 fi
+
+printf "7Reply with spoiler	$REQUEST/postfile	$SERVER_HOST	$SERVER_PORT\r\n"

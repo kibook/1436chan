@@ -107,6 +107,7 @@ do
 		ln template_postres $thread/postres
 		ln template_posthttp $thread/posthttp
 		ln template_postfile $thread/postfile
+		ln template_postsplr $thread/postsplr
 
 		ln template_gophermap $thread/gophermap
 	else
