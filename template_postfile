@@ -36,6 +36,11 @@ fi
 
 size=$(curl -L -sI "$url" | grep "Content-Length" | awk '{print $2}' | tr -d '\r')
 
+if [ ! "$size" ]
+then
+	size=0
+fi
+
 if [ $size -lt 1 ]
 then
 	printf "3Unable to retrieve file size	fake	(NULL)	0\r\n"
