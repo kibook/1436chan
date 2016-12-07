@@ -44,6 +44,7 @@ else
 		ln template_posthttp $post/posthttp
 		ln template_postfile $post/postfile
 		ln template_postsplr $post/postsplr
+		ln template_postfileb64 $post/postfileb64
 
 		printf "iThread created successfully!	fake	(NULL)	0\r\n"
 		printf "1View thread	$CHAN_ROOT/$post	$SERVER_HOST	$SERVER_PORT\r\n"

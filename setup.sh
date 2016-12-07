@@ -87,6 +87,7 @@ do
 	rm -f $thread/posthttp
 	rm -f $thread/postfile
 	rm -f $thread/postsplr
+	rm -f $thread/postfileb64
 	rm -f $thread/gophermap
 
 	ln template_post $thread/post
@@ -95,6 +96,7 @@ do
 	ln template_gophermap $thread/gophermap
 	ln template_postfile $thread/postfile
 	ln template_postsplr $thread/postsplr
+	ln template_postfileb64 $thread/postfileb64
 done
 
 for thread in $(ls -dtr sticky_* 2>/dev/null)
@@ -108,12 +110,14 @@ do
 		rm -f $thread/posthttp
 		rm -f $thread/postfile
 		rm -f $thread/postsplr
+		rm -f $thread/postfileb64
 
 		ln template_post $thread/post
 		ln template_postres $thread/postres
 		ln template_posthttp $thread/posthttp
 		ln template_postfile $thread/postfile
 		ln template_postsplr $thread/postsplr
+		ln template_postfileb64 $thread/postfileb64
 
 		ln template_gophermap $thread/gophermap
 	else
