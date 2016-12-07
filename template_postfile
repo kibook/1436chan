@@ -65,9 +65,26 @@ else
 		"image/jpeg")	type=I;;
 		"image/gif")	type=g;;
 		"text/plain")	type=0;;
+		"text/html")	type=h;;
 		"audio/wav")	type=s;;
 		*) type=9;;
 	esac
+
+	if [[ "$ext" == "$url" ]]
+	then
+		case "$mime" in
+			"video/webm")	ext="webm";;
+			"image/png")	ext="png";;
+			"image/jpeg")	ext="jpg";;
+			*)		ext=""
+		esac
+		
+		if [[ "$ext" != "" ]]
+		then
+			mv "$fname" "$fname.$ext"
+			fname="$fname.$ext"
+		fi
+	fi
 
 	printf "$type$dis	$CHAN_ROOT/$id/$fname	$SERVER_HOST	$SERVER_PORT\r\n" > $post
 
