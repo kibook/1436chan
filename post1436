@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Usage:
 #   1436post <url> <file> <display>
@@ -10,4 +10,10 @@
 gurl="$1"
 data=$(cat "$2" | base64 -w 0)
 disp="$3"
+
+if [ ! "$disp" ]
+then
+	disp=$(basename "$2")
+fi
+
 curl "$gurl/postfileb64?$data $disp"
