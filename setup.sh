@@ -83,6 +83,7 @@ do
 	rm -f $thread/postres
 	rm -f $thread/posthttp
 	rm -f $thread/postfile
+	rm -f $thread/postsplr
 	rm -f $thread/gophermap
 
 	ln template_post $thread/post
@@ -90,6 +91,7 @@ do
 	ln template_posthttp $thread/posthttp
 	ln template_gophermap $thread/gophermap
 	ln template_postfile $thread/postfile
+	ln template_postsplr $thread/postsplr
 done
 
 for thread in $(ls -dtr sticky_* 2>/dev/null)
@@ -137,10 +139,10 @@ then
 fi
 
 # permissions
-chmod g+w .
-chmod g+s .
-chmod g+w template_*
-chmod g+w $CHAN_ARCHIVE
-chmod g+s $CHAN_ARCHIVE
-chmod g+w [0-9]*
-chmod g+w sticky_[0-9]*
+chmod -f g+w .
+chmod -f g+s .
+chmod -f g+w template_*
+chmod -f g+w $CHAN_ARCHIVE
+chmod -f g+s $CHAN_ARCHIVE
+chmod -f g+w [0-9]*
+chmod -f g+w sticky_[0-9]*
