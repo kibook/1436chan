@@ -12,6 +12,11 @@ _____________________________________________________________________
 
     2. Run sh setup.sh
 
+    You can use the -quick flag (sh setup.sh -quick) to skip the
+    setup prompts and select all defaults. This is particularly
+    useful when upgrading (setup.sh will use your existing
+    configuration as the defaults).
+
 
 SETUP OPTIONS
 _____________________________________________________________________
