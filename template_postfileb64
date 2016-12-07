@@ -1,0 +1,77 @@
+#!/bin/bash
+
+cd "${0%/*}"
+
+if [ ! "$@" ]
+then
+	exit
+fi
+
+if [ ! -e ../params.sh ]
+then
+	exit
+fi
+
+source ../params.sh
+
+if [ ! $MAX_UPLOAD -gt 0 ]
+then
+	printf "3Uploads are disabled	fake	(NULL)	0\r\n"
+	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+	exit
+fi
+
+id=$(basename $(pwd))
+
+post=$(date +%s)
+
+data="$1"
+disp="$2"
+
+if [ ! "$disp" ]
+then
+	disp="untitled"
+fi
+
+size="${#data}"
+
+if [ ! "$size" ]
+then
+	size=0
+fi
+
+if [ $size -lt 1 ]
+then
+	printf "3Unable to retrieve file size	fake	(NULL)	0\r\n"
+elif [ $size -gt $MAX_UPLOAD ]
+then
+	printf "3File too large (max $MAX_UPLOAD bytes)	fake	(NULL)	0\r\n"
+else
+	fname="file_$post"
+
+	echo "$data" | base64 -d > "$fname"
+
+	mime=$(file -i -b "$fname")
+	mime="${mime%;*}"
+
+	case "$mime" in
+		"image/png")	type=p;;
+		"image/jpeg")	type=I;;
+		"image/gif")	type=g;;
+		"text/plain")	type=0;;
+		"text/html")	type=h;;
+		"audio/wav")	type=s;;
+		*) type=9;;
+	esac
+
+	printf "$type$disp	$CHAN_ROOT/$id/$fname	$SERVER_HOST	$SERVER_PORT\r\n" > $post
+
+	if [ -e $post ]
+	then
+		printf "iPost successful!	fake	(NULL)	0\r\n"
+	else
+		printf "3Could not post.	fake	(NULL)	0\r\n"
+	fi
+fi
+
+printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
