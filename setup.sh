@@ -104,6 +104,7 @@ do
 		rm -f $thread/postres
 		rm -f $thread/posthttp
 		rm -f $thread/postfile
+		rm -f $thread/postsplr
 
 		ln template_post $thread/post
 		ln template_postres $thread/postres
