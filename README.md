@@ -52,10 +52,10 @@ http://khzai.net/1/chan (via [Bucky](https://github.com/kibook/bucky))
     /var/gopher/chan# sh setup.sh
     ```
 
-		You can use the -quick flag with setup.sh to skip the prompts and select all defaults. When upgrading, setup.sh will use
-		your current configuration as the defaults.
+ You can use the -quick flag with setup.sh to skip the prompts and select all defaults. When upgrading, setup.sh will use
+ your current configuration as the defaults.
 
-		```
-		/var/gopher/chan# sh setup.sh -quick
-		```
+ ```
+ /var/gopher/chan# sh setup.sh -quick
+ ```
 
