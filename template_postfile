@@ -76,6 +76,7 @@ else
 			"video/webm")	ext="webm";;
 			"image/png")	ext="png";;
 			"image/jpeg")	ext="jpg";;
+			"C source")	ext="c";;
 			*)		ext=""
 		esac
 		
