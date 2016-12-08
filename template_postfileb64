@@ -61,7 +61,7 @@ else
 		"text/plain")	type=0;;
 		"text/html")	type=h;;
 		"audio/wav")	type=s;;
-		"C source")	type=0;;
+		"text/x-c")	type=0;;
 		*)		type=9;;
 	esac
 
@@ -69,7 +69,7 @@ else
 		"video/webm")	ext="webm";;
 		"image/png")	ext="png";;
 		"image/jpeg")	ext="jpg";;
-		"C source")	ext="c";;
+		"text/x-c")	ext="c";;
 		*)		ext="";;
 	esac
 
