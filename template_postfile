@@ -52,7 +52,7 @@ else
 		fname="file_$post.$ext"
 	fi
 
-	curl -L "$url" > "$fname" -m 2 -l $MAX_UPLOAD
+	curl -L "$url" > "$fname" -m 3 -l $MAX_UPLOAD
 
 	size=$(stat --printf "%s" "$fname")
 
