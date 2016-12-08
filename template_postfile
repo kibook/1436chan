@@ -67,6 +67,7 @@ else
 		"text/plain")	type=0;;
 		"text/html")	type=h;;
 		"audio/wav")	type=s;;
+		"C source")	type=0;;
 		*) type=9;;
 	esac
 
