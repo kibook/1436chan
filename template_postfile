@@ -64,10 +64,9 @@ else
 		"image/png")	type=p;;
 		"image/jpeg")	type=I;;
 		"image/gif")	type=g;;
-		"text/plain")	type=0;;
-		"text/html")	type=h;;
 		"audio/wav")	type=s;;
-		"text/x-c")	type=0;;
+		"text/html")	type=h;;
+		"text/*")	type=0;;
 		*) type=9;;
 	esac
 
@@ -77,6 +76,7 @@ else
 			"video/webm")	ext="webm";;
 			"image/png")	ext="png";;
 			"image/jpeg")	ext="jpg";;
+			"text/html")	ext="html";;
 			"text/x-c")	ext="c";;
 			*)		ext=""
 		esac
