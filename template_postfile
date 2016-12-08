@@ -41,12 +41,9 @@ then
 	size=0
 fi
 
-if [ $size -lt 1 ]
+if [ $size -gt $MAX_UPLOAD ]
 then
-	printf "3Unable to retrieve file size	fake	(NULL)	0\r\n"
-elif [ $size -gt $MAX_UPLOAD ]
-then
-	printf "3File too large (max $MAX_UPLOAD bytes)	fake	(NULL)	0\r\n"
+	printf "3File too large ($size/$MAX_UPLOAD bytes)	fake	(NULL)	0\r\n"
 else
 	if [[ "$ext" == "$url" ]]
 	then
@@ -55,46 +52,59 @@ else
 		fname="file_$post.$ext"
 	fi
 
-	curl -L "$url" > "$fname"
+	curl -L "$url" > "$fname" -m 2 -l $MAX_UPLOAD
 
-	mime=$(file -i -b "$fname")
-	mime="${mime%;*}"
+	size=$(stat --printf "%s" "$fname")
 
-	case "$mime" in
-		"image/png")	type=p;;
-		"image/jpeg")	type=I;;
-		"image/gif")	type=g;;
-		"audio/wav")	type=s;;
-		"text/html")	type=h;;
-		"text/"*)	type=0;;
-		*) type=9;;
-	esac
-
-	if [[ "$ext" == "$url" ]]
+	if [ ! "$size" ]
 	then
-		case "$mime" in
-			"video/webm")	ext="webm";;
-			"image/png")	ext="png";;
-			"image/jpeg")	ext="jpg";;
-			"text/html")	ext="html";;
-			"text/x-c")	ext="c";;
-			*)		ext=""
-		esac
-		
-		if [[ "$ext" != "" ]]
-		then
-			mv "$fname" "$fname.$ext"
-			fname="$fname.$ext"
-		fi
+		size=0
 	fi
 
-	printf "$type$dis	$CHAN_ROOT/$id/$fname	$SERVER_HOST	$SERVER_PORT\r\n" > $post
-
-	if [ -e $post ]
+	if [[ $size -gt $MAX_UPLOAD || $? -ne 0 ]]
 	then
-		printf "iPost successful!	fake	(NULL)	0\r\n"
+		printf "3Failed to fetch file (too large or timed out).	fake	(NULL)	0\r\n"
+		rm -f "$fname"
 	else
-		printf "3Could not post.	fake	(NULL)	0\r\n"
+		mime=$(file -i -b "$fname")
+		mime="${mime%;*}"
+
+		case "$mime" in
+			"image/png")	type=p;;
+			"image/jpeg")	type=I;;
+			"image/gif")	type=g;;
+			"audio/wav")	type=s;;
+			"text/html")	type=h;;
+			"text/"*)	type=0;;
+			*) type=9;;
+		esac
+
+		if [[ "$ext" == "$url" ]]
+		then
+			case "$mime" in
+				"video/webm")	ext="webm";;
+				"image/png")	ext="png";;
+				"image/jpeg")	ext="jpg";;
+				"text/html")	ext="html";;
+				"text/x-c")	ext="c";;
+				*)		ext=""
+			esac
+			
+			if [[ "$ext" != "" ]]
+			then
+				mv "$fname" "$fname.$ext"
+				fname="$fname.$ext"
+			fi
+		fi
+
+		printf "$type$dis	$CHAN_ROOT/$id/$fname	$SERVER_HOST	$SERVER_PORT\r\n" > $post
+
+		if [ -e $post ]
+		then
+			printf "iPost successful!	fake	(NULL)	0\r\n"
+		else
+			printf "3Could not post.	fake	(NULL)	0\r\n"
+		fi
 	fi
 fi
 
