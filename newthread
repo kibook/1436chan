@@ -34,6 +34,10 @@ else
 	mkdir $post
 	chmod g+w $post
 
+	mkdir "$UPLOADS"/$post
+	chmod g+w "$UPLOADS"/$post
+	chmod g+s "$UPLOADS"/$post
+
 	if [ -e $post ]
 	then
 		echo "$comment" > $post/gophertag

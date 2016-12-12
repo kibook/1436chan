@@ -12,6 +12,7 @@ then
 	DEFAULT_SHOW_EMPTY_THREADS=$SHOW_EMPTY_THREADS
 	DEFAULT_LAST_POSTS=$LAST_POSTS
 	DEFAULT_MAX_UPLOAD=$MAX_UPLOAD
+	DEFAULT_UPLOADS="$UPLOADS"
 else
 	DEFAULT_CHAN_ROOT=/$(basename $(pwd))
 	DEFAULT_MAX_THREADS=15
@@ -22,6 +23,7 @@ else
 	DEFAULT_SHOW_EMPTY_THREADS=y
 	DEFAULT_LAST_POSTS=3
 	DEFAULT_MAX_UPLOAD=1000000
+	DEFAULT_UPLOADS=files
 fi
 
 if [ "$1" != "-quick" ]
@@ -46,6 +48,7 @@ then
 	if [ ! "$ENABLE_UPLOAD" = "n" ]
 	then
 		read -p "Maximum uploaded file size (bytes) [$DEFAULT_MAX_UPLOAD]: " MAX_UPLOAD
+		read -p "Upload directory [files]: " UPLOADS
 	else
 		MAX_UPLOAD=0
 	fi
@@ -68,6 +71,7 @@ if [ -z "$DATE_FORMAT" ]; then DATE_FORMAT="$DEFAULT_DATE_FORMAT"; fi
 if [ -z "$SHOW_EMPTY_THREADS" ]; then SHOW_EMPTY_THREADS=$DEFAULT_SHOW_EMPTY_THREADS; fi
 if [ -z "$LAST_POSTS" ]; then LAST_POSTS=$DEFAULT_LAST_POSTS; fi
 if [ -z "$MAX_UPLOAD" ]; then MAX_UPLOAD=$DEFAULT_MAX_UPLOAD; fi
+if [ -z "$UPLOADS" ]; then UPLOADS="$DEFAULT_UPLOADS"; fi
 
 echo "CHAN_ROOT=$CHAN_ROOT" > params.sh
 echo "MAX_THREADS=$MAX_THREADS" >> params.sh
@@ -78,8 +82,14 @@ echo "DATE_FORMAT='$DATE_FORMAT'" >> params.sh
 echo "SHOW_EMPTY_THREADS=$SHOW_EMPTY_THREADS" >> params.sh
 echo "LAST_POSTS=$LAST_POSTS" >> params.sh
 echo "MAX_UPLOAD=$MAX_UPLOAD" >> params.sh
+echo "UPLOADS=$UPLOADS" >> params.sh
 
 # fix links, setup archive
+if [ ! -e "$UPLOADS" ]
+then
+	mkdir "$UPLOADS"
+fi
+
 for thread in $(ls -dtr [0-9]* 2>/dev/null)
 do
 	rm -f $thread/post
@@ -97,6 +107,11 @@ do
 	ln template_postfile $thread/postfile
 	ln template_postsplr $thread/postsplr
 	ln template_postfileb64 $thread/postfileb64
+
+	if [ ! -e "$UPLOADS"/$thread ]
+	then
+		mkdir "$UPLOADS"/$thread
+	fi
 done
 
 for thread in $(ls -dtr sticky_* 2>/dev/null)
@@ -120,11 +135,15 @@ do
 		ln template_postfileb64 $thread/postfileb64
 
 		ln template_gophermap $thread/gophermap
+
+		if [ ! -e "$UPLOADS"/$thread ]
+		then
+			mkdir "$UPLOADS"/$thread
+		fi
 	else
 		ln template_rosticky_gophermap $thread/gophermap
 	fi
 done
-		
 
 if [ "$CHAN_ARCHIVE" ]
 then
@@ -154,3 +173,7 @@ chmod -f g+w $CHAN_ARCHIVE
 chmod -f g+s $CHAN_ARCHIVE
 chmod -f g+w [0-9]*
 chmod -f g+w sticky_[0-9]*
+chmod -f g+w "$UPLOADS"
+chmod -f g+s "$UPLOADS"
+chmod -f g+w "$UPLOADS"/[0-9]*
+chmod -f g+w "$UPLOADS"/sticky_[0-9]*

@@ -76,18 +76,17 @@ _____________________________________________________________________
 DELETING A THREAD OR POST
 _____________________________________________________________________
 
-    Deleting a thread or post is as simple as using rm.
-
     To delete a thread (from the root folder):
 
-        rm -r <thread>
+        sh deletethread.sh <thread>
 
-    where <thread> is the id number of the thread (Unix timestamp
-    when it was created).
+    where <thread> is the id of the thread. For normal threads this
+    is the Unix timestamp when it was created. For stickies this is
+    the prefix sticky_ plus the Unix timestamp.
 
     To delete a post (from the root folder):
 
-        rm <thread>/<post>
+       sh deletepost.sh <post>
 
   where <post> is the id number of the post.
 
@@ -160,7 +159,7 @@ _____________________________________________________________________
   group for these users and give group ownership to the chan
   directory. For example:
 
-      chown -R server:1436chan /var/gopher/chan
+      chgrp -R 1436chan /var/gopher/chan
 
   will set group ownership of your chan folder to '1436chan'. Then:
 

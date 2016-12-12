@@ -2,7 +2,7 @@
 
 cd "${0%/*}"
 
-if [ "${#@}" -lt 1]
+if [ ! "$@" ]
 then
 	exit
 fi
@@ -45,11 +45,13 @@ if [ $size -gt $MAX_UPLOAD ]
 then
 	printf "3File too large ($size/$MAX_UPLOAD bytes)	fake	(NULL)	0\r\n"
 else
+	cd "../$UPLOADS/$id"
+
 	if [[ "$ext" == "$url" ]]
 	then
-		fname="file_$post"
+		fname="$post"
 	else
-		fname="file_$post.$ext"
+		fname="$post.$ext"
 	fi
 
 	curl -L "$url" > "$fname" -m 3 --limit-rate $MAX_UPLOAD
@@ -97,7 +99,9 @@ else
 			fi
 		fi
 
-		printf "$type$dis	$CHAN_ROOT/$id/$fname	$SERVER_HOST	$SERVER_PORT\r\n" > $post
+		cd ../../$id
+
+		printf "$type$dis	$CHAN_ROOT/$UPLOADS/$id/$fname	$SERVER_HOST	$SERVER_PORT\r\n" > $post
 
 		if [ -e $post ]
 		then
