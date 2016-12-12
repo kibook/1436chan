@@ -84,6 +84,10 @@ echo "LAST_POSTS=$LAST_POSTS" >> params.sh
 echo "MAX_UPLOAD=$MAX_UPLOAD" >> params.sh
 echo "UPLOADS=$UPLOADS" >> params.sh
 
+# root permissions
+chmod -f g+w .
+chmod -f g+s .
+
 # fix links, setup archive
 if [ ! -e "$UPLOADS" ]
 then
@@ -165,9 +169,7 @@ then
 	done
 fi
 
-# permissions
-chmod -f g+w .
-chmod -f g+s .
+# additional permissions
 chmod -f g+w template_*
 chmod -f g+w $CHAN_ARCHIVE
 chmod -f g+s $CHAN_ARCHIVE
