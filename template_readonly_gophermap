@@ -19,9 +19,19 @@ else
 	printf "1Return	$CHAN_ROOT	$SERVER_HOST	$SERVER_PORT\r\n"
 fi
 
+printf "i	fake	(NULL)	0\r\n"
+
+printf "i$(date -d @$thread +"$DATE_FORMAT")"
+
+if [[ -e archive ]]
+then
+	archivedate=$(cat archive)
+	printf " (archived $(date -d @$archivedate +"$DATE_FORMAT"))"
+fi
+printf "	fake	(NULL)	0\r\n"
+
 ../gophermaputil <<EOF
 
-$(date -d @$thread +"$DATE_FORMAT")
 ___________________________________________________________________
 $(cat gophertag)
 ___________________________________________________________________
