@@ -1,6 +1,6 @@
 . ./params.sh
 
-touch $1/archive
+echo $(date +%s) >  $1/archive
 
 rm -f $1/post
 rm -f $1/postres
