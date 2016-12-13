@@ -32,7 +32,7 @@ _____________________________________________________________________
         The maximum number of threads allowed on the board. When
         MAX_THREADS threads already exist and a user creates a
         new thread, the oldest thread (in terms of last updated)
-        is either archived or deleted (see CHAN_ARCHIVE below).
+        is either archived or deleted (see ENABLE_ARCHIVE below).
 
     MAX_TITLELEN
         The maximum characters allowed in a thread
@@ -42,9 +42,11 @@ _____________________________________________________________________
         The maximum characters allowed in a post. Additional
         characters are truncated.
 
-    CHAN_ARCHIVE
-        The folder where archived threads are stored. If blank,
-        old threads are deleted instead of archived.
+    ENABLE_ARCHIVE
+        Either 'y' or 'n'. If 'y', then old threads are preserved
+	instead of deleted when MAX_THREADS is reached. They will
+	be listed in a special "Archive" section instead of the
+	main menu. Otherwise, old threads are permanently deleted.
 
     DATE_FORMAT
         The format for displaying the date on posts and threads.
@@ -71,9 +73,6 @@ _____________________________________________________________________
 	from other arbitrary servers. If you are concerned about
 	what connections you make or what kinds of files you are
 	storing on your server, disable this!
-
-    UPLOADS
-        The folder where uploaded files are stored.
 
 
 DELETING A THREAD OR POST
