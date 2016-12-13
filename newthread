@@ -7,23 +7,34 @@ source ./params.sh
 comment=$(echo "$@" | cut -c1-$MAX_TITLELEN)
 post=$(date +%s)
 
-if [ "$comment" = "" ]
+if [[ "$comment" = "" ]]
 then
 	printf "3Thread creation failed.	fake	(NULL)	0\r\n"
 	printf "iYou must post a comment.	fake	(NULL)	0\r\n"
 else
-	if [ $(ls -d [0-9]* 2>/dev/null | wc -l) -ge $MAX_THREADS ]
-	then
-		old=$(ls -d -t [0-9]* 2>/dev/null | tail -n 1)
+	nthreads=$(ls -d [0-9]* 2>/dev/null | wc -l)
+	narchive=$(ls -d [0-9]*/archive 2>/dev/null | wc -l)
 
-		if [ ! -z "$CHAN_ARCHIVE" ]
+	if [[ $(($nthreads - $narchive)) -ge $MAX_THREADS ]]
+	then
+		for thread in $(ls -dt [0-9]* 2>/dev/null)
+		do
+			if [[ -e $thread/archive ]]
+			then
+				continue
+			else
+				old=$thread
+			fi
+		done
+
+		if [[ "$ENABLE_ARCHIVE" != "n" ]]
 		then
 			sh archive.sh $old
 		else
 			rm -r $old
 		fi
 
-		if [ -e $old ]
+		if [[ ! -e $old/archive ]]
 		then
 			printf "3ERROR: Failed to archive or remove thread!	fake	(NULL)	0\r\n"
 			printf "1Return	$CHAN_ROOT	$SERVER_HOST	$SERVER_PORT\r\n"
@@ -34,11 +45,7 @@ else
 	mkdir $post
 	chmod g+w $post
 
-	mkdir "$UPLOADS"/$post
-	chmod g+w "$UPLOADS"/$post
-	chmod g+s "$UPLOADS"/$post
-
-	if [ -e $post ]
+	if [[ -e $post ]]
 	then
 		echo "$comment" > $post/gophertag
 

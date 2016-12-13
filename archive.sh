@@ -1,11 +1,13 @@
 . ./params.sh
 
-rm $1/post
-rm $1/postres
-rm $1/posthttp
-rm $1/postfile
-rm $1/postsplr
-rm $1/gophermap
-ln template_archive_gophermap $1/gophermap
+touch $1/archive
 
-mv $1 "$CHAN_ARCHIVE"/
+rm -f $1/post
+rm -f $1/postres
+rm -f $1/posthttp
+rm -f $1/postfile
+rm -f $1/postsplr
+rm -f $1/postfileb64
+rm -f $1/gophermap
+
+ln template_readonly_gophermap $1/gophermap

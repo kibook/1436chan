@@ -5,15 +5,21 @@ cd "${0%/*}"
 thread=$(basename $(pwd))
 thread="${thread#sticky_*}"
 
-if [ ! -e "../../params.sh" ]
+if [ ! -e "../params.sh" ]
 then
 	exit
 fi
 
-source ../../params.sh
+source ../params.sh
 
-../../gophermaputil <<EOF
-1Return	$CHAN_ROOT/$CHAN_ARCHIVE	$SERVER_HOST	$SERVER_PORT
+if [[ -e archive ]]
+then
+	printf "1Return	$CHAN_ROOT/archive	$SERVER_HOST	$SERVER_PORT\r\n"
+else
+	printf "1Return	$CHAN_ROOT	$SERVER_HOST	$SERVER_PORT\r\n"
+fi
+
+../gophermaputil <<EOF
 
 $(date -d @$thread +"$DATE_FORMAT")
 ___________________________________________________________________
@@ -35,9 +41,9 @@ do
 		comment=$(echo "$comment" | fmt -67)
 		while read line
 		do
-			printf "i$line	fake	(NULL)	0\r\n"
+			printf "i$line\tfake\t(NULL)\t0\r\n"
 		done < <(echo "$comment")
 	fi
-	printf "i	fake	(NULL)	0\r\n"
+	printf "i\tfake\t(NULL)\t0\r\n"
 	i=$((i+1))
 done

@@ -81,7 +81,7 @@ _____________________________________________________________________
 
     To delete a thread (from the root folder):
 
-        sh deletethread.sh <thread>
+        rm -r <thread>
 
     where <thread> is the id of the thread. For normal threads this
     is the Unix timestamp when it was created. For stickies this is
@@ -89,9 +89,9 @@ _____________________________________________________________________
 
     To delete a post (from the root folder):
 
-       sh deletepost.sh <post>
+       rm <thread>/<post>
 
-  where <post> is the id number of the post.
+  where <post> is the id number of the post in <thread>.
 
 
 MESSAGE OF THE DAY

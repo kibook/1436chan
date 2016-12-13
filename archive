@@ -1,0 +1,21 @@
+#!/bin/bash
+
+cd "${0%/*}"
+
+source params.sh
+
+printf "1Return	$CHAN_ROOT	$SERVER_HOST	$SERVER_PORT\r\n"
+printf "i	fake	(NULL)	0\r\n"
+printf "iArchived threads:	fake	(NULL)	0\r\n"
+
+for thread in $(ls -dt [0-9]* 2>/dev/null)
+do
+	cd $thread
+
+	if [[ -e archive ]]
+	then
+		printf "1[@$thread] $(cat gophertag)	$CHAN_ROOT/$thread	$SERVER_HOST	$SERVER_PORT\r\n"
+	fi
+
+	cd ..
+done

@@ -26,13 +26,9 @@ then
 	printf "i	fake	(NULL)	0\r\n"
 	printf "iComment too long ($len/$MAX_POSTLEN)	fake	(NULL)	0\r\n"
 else
-	cd "../$UPLOADS/$id"
+	echo "$comment" > s_$post
 
-	echo "$comment" > $post
-
-	cd ../../$id
-
-	echo "0*SPOILER*	$CHAN_ROOT/$UPLOADS/$id/$post	$SERVER_HOST	$SERVER_PORT" > $post
+	echo "0*SPOILER*	$CHAN_ROOT/$id/s_$post	$SERVER_HOST	$SERVER_PORT" > $post
 
 	if [ -e $post ]
 	then
