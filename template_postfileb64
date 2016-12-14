@@ -47,6 +47,8 @@ elif [ $size -gt $MAX_UPLOAD ]
 then
 	printf "3File too large (max $MAX_UPLOAD bytes)	fake	(NULL)	0\r\n"
 else
+	cd ..
+
 	fname="file_$post"
 
 	echo "$data" | base64 -d > "$fname"
@@ -95,6 +97,10 @@ else
 		mv "$fname" "$fname.$ext"
 		fname="$fname.$ext"
 	fi
+
+	mv "$fname" $id/
+
+	cd $id
 
 	printf "$type$disp	$CHAN_ROOT/$id/$fname	$SERVER_HOST	$SERVER_PORT\r\n" > $post
 

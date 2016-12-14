@@ -61,6 +61,8 @@ if [ $size -gt $MAX_UPLOAD ]
 then
 	printf "3File too large ($size/$MAX_UPLOAD bytes)	fake	(NULL)	0\r\n"
 else
+	cd ..
+
 	if [[ ! "$ext" ]]
 	then
 		fname="file_$post"
@@ -130,7 +132,9 @@ else
 			fi
 		fi
 
-		cd ../../$id
+		mv "$fname" $id/
+
+		cd $id
 
 		printf "$type$dis	$CHAN_ROOT/$id/$fname	$SERVER_HOST	$SERVER_PORT\r\n" > $post
 
