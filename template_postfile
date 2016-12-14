@@ -32,6 +32,17 @@ ext="${ext%%\?*}"
 ext="${ext##*.}"
 
 url="$1"
+
+uri="${url#*://}"
+res="${uri##*/}"
+res="${res%%\?*}"
+ext="${res##*.}"
+
+if [[ "$ext" == "$res" ]]
+then
+	ext=""
+fi
+
 dis="${@:2}"
 
 if [ ! "$dis" ]
@@ -50,7 +61,7 @@ if [ $size -gt $MAX_UPLOAD ]
 then
 	printf "3File too large ($size/$MAX_UPLOAD bytes)	fake	(NULL)	0\r\n"
 else
-	if [[ "$ext" == "$url" ]]
+	if [[ ! "$ext" ]]
 	then
 		fname="file_$post"
 	else
@@ -101,7 +112,7 @@ else
 			*) type=9;;
 		esac
 
-		if [[ "$ext" == "$url" ]]
+		if [[ ! "$ext" ]]
 		then
 			case "$mime" in
 				"video/webm")	ext="webm";;
