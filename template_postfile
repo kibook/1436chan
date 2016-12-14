@@ -48,7 +48,7 @@ fi
 
 if [[ ! "$proto" ]]
 then
-	printf "3Invalud URL: $url	fake	(NULL)	0\r\n"
+	printf "3Invalid URL: $url	fake	(NULL)	0\r\n"
 	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
 	exit
 fi
