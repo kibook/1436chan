@@ -12,6 +12,7 @@ then
 	DEFAULT_SHOW_EMPTY_THREADS=$SHOW_EMPTY_THREADS
 	DEFAULT_LAST_POSTS=$LAST_POSTS
 	DEFAULT_MAX_UPLOAD=$MAX_UPLOAD
+	DEFAULT_MAX_IMAGE=$MAX_IMAGE
 else
 	DEFAULT_CHAN_ROOT=/$(basename $(pwd))
 	DEFAULT_MAX_THREADS=15
@@ -22,6 +23,7 @@ else
 	DEFAULT_SHOW_EMPTY_THREADS=y
 	DEFAULT_LAST_POSTS=3
 	DEFAULT_MAX_UPLOAD=1000000
+	DEFAULT_MAX_IMAGE=5000x5000
 fi
 
 if [ "$1" != "-quick" ]
@@ -42,6 +44,8 @@ then
 	else
 		MAX_UPLOAD=0
 	fi
+
+	read -p "Maximum image dimensions (WxH) [5000x5000]: " MAX_IMAGE
 fi
 
 if [ -z "$CHAN_ROOT" ]; then CHAN_ROOT="$DEFAULT_CHAN_ROOT"; fi
@@ -53,6 +57,7 @@ if [ -z "$DATE_FORMAT" ]; then DATE_FORMAT="$DEFAULT_DATE_FORMAT"; fi
 if [ -z "$SHOW_EMPTY_THREADS" ]; then SHOW_EMPTY_THREADS=$DEFAULT_SHOW_EMPTY_THREADS; fi
 if [ -z "$LAST_POSTS" ]; then LAST_POSTS=$DEFAULT_LAST_POSTS; fi
 if [ -z "$MAX_UPLOAD" ]; then MAX_UPLOAD=$DEFAULT_MAX_UPLOAD; fi
+if [ -z "$MAX_IMAGE" ]; then MAX_IMAGE=$DEFAULT_MAX_IMAGE; fi
 
 echo "CHAN_ROOT=$CHAN_ROOT" > params.sh
 echo "MAX_THREADS=$MAX_THREADS" >> params.sh
@@ -63,6 +68,7 @@ echo "DATE_FORMAT='$DATE_FORMAT'" >> params.sh
 echo "SHOW_EMPTY_THREADS=$SHOW_EMPTY_THREADS" >> params.sh
 echo "LAST_POSTS=$LAST_POSTS" >> params.sh
 echo "MAX_UPLOAD=$MAX_UPLOAD" >> params.sh
+echo "MAX_IMAGE=$MAX_IMAGE" >> params.sh
 
 # root permissions
 chmod -f g+w .

@@ -21,7 +21,7 @@ fi
 
 if [ ! "$display" ]
 then
-	display="$uri"
+	display=$(echo "$uri" | cut -c1-70)
 fi
 
 post=$(date +%s)

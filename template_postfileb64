@@ -54,6 +54,23 @@ else
 	mime=$(file -i -b "$fname")
 	mime="${mime%;*}"
 
+	if [[ "$MAX_IMAGE" && "$mime" == "image/"* ]]
+	then
+		maxw=$(echo $MAX_IMAGE | cut -f 1 -d 'x')
+		maxh=$(echo $MAX_IMAGE | cut -f 2 -d 'x')
+		dims=$(identify "$fname" | head -n 1 | cut -f 3 -d ' ')
+		imgw=$(echo $dims | cut -f 1 -d 'x')
+		imgh=$(echo $dims | cut -f 2 -d 'x')
+
+		if [[ $imgw -gt $maxw || $imgh -gt $maxh ]]
+		then
+			printf "3Image too large ($imgw x $imgh, max $maxw x $maxh)	fake	(NULL)	0\r\n"
+			printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+			rm -f "$fname"
+			exit
+		fi
+	fi
+
 	case "$mime" in
 		"image/png")	type=p;;
 		"image/jpeg")	type=I;;

@@ -17,7 +17,7 @@ display="${@:2}"
 
 if [ ! "$display" ]
 then
-	display="$uri"
+	display=$(echo "$uri" | cut -c1-70)
 fi
 
 comment=$(../guri "$uri" "$display")
