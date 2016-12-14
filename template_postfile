@@ -26,9 +26,26 @@ id=$(basename $(pwd))
 post=$(date +%s)
 
 url=$(echo "$@" | cut -c1-$MAX_POSTLEN)
-dis=$(echo "$url" | cut -c1-70)
 
-uri="${url#*://}"
+if [[ "$url" != *"://"* ]]
+then
+	printf "3Invalid URL: $url	fake	(NULL)	0\r\n"
+	printf "iYou must include the protocol (http://, gopher://, etc.)	fake	(NULL)	0\r\n"
+	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+	exit
+fi
+
+proto="${url%://*}"
+uri="${url##*://}"
+
+if [[ "$proto" == *" "* ]]
+then
+	dis=$(echo "$proto" | rev | cut -f 2- -d ' ' | rev)
+	proto=$(echo "$proto" | rev | cut -f 1 -d ' ' | rev)
+else
+	dis=$(echo "$url" | cut -c1-70)
+fi
+
 res="${uri##*/}"
 res="${res%%\?*}"
 ext="${res##*.}"
@@ -38,7 +55,7 @@ then
 	ext=""
 fi
 
-size=$(curl -L -sI "$url" | grep "Content-Length" | awk '{print $2}' | tr -d '\r')
+size=$(curl -L -sI "$proto://$uri" | grep "Content-Length" | awk '{print $2}' | tr -d '\r')
 
 if [ ! "$size" ]
 then
@@ -58,7 +75,7 @@ else
 		fname="file_$post.$ext"
 	fi
 
-	curl -L "$url" > "$fname" -m 3 --limit-rate $MAX_UPLOAD
+	curl -L "$proto://$uri" > "$fname" -m 3 --limit-rate $MAX_UPLOAD
 
 	size=$(stat --printf "%s" "$fname")
 

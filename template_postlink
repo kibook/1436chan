@@ -24,14 +24,14 @@ then
 fi
 
 proto="${url%://*}"
-uri="${url#*://}"
+uri="${url##*://}"
 
 if [[ "$proto" == *" "* ]]
 then
 	display=$(echo "$proto" | rev | cut -f 2- -d ' ' | rev)
 	proto=$(echo "$proto" | rev | cut -f 1 -d ' ' | rev)
 else
-	display="$url"
+	display=$(echo "$url" | cut -c1-70)
 fi
 
 case $proto in
