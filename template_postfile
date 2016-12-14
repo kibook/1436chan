@@ -25,13 +25,8 @@ id=$(basename $(pwd))
 
 post=$(date +%s)
 
-ext="$1"
-ext="${ext#*://}"
-ext="${ext##*/}"
-ext="${ext%%\?*}"
-ext="${ext##*.}"
-
-url="$1"
+url=$(echo "$@" | cut -c1-$MAX_POSTLEN)
+dis=$(echo "$url" | cut -c1-70)
 
 uri="${url#*://}"
 res="${uri##*/}"
@@ -41,13 +36,6 @@ ext="${res##*.}"
 if [[ "$ext" == "$res" ]]
 then
 	ext=""
-fi
-
-dis="${@:2}"
-
-if [ ! "$dis" ]
-then
-	dis=$(echo "$url" | cut -c1-70)
 fi
 
 size=$(curl -L -sI "$url" | grep "Content-Length" | awk '{print $2}' | tr -d '\r')

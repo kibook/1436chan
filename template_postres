@@ -12,13 +12,9 @@ source ../params.sh
 id=$(basename $(pwd))
 
 post=$(date +%s)
-uri=$(echo "$1" | cut -c1-$MAX_POSTLEN)
-display="${@:2}"
 
-if [ ! "$display" ]
-then
-	display=$(echo "$uri" | cut -c1-70)
-fi
+uri=$(echo "$@" | cut -c1-$MAX_POSTLEN)
+display=$(echo "$uri" | cut -c1-70)
 
 comment=$(../guri "$uri" "$display")
 

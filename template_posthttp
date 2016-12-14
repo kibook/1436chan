@@ -11,17 +11,12 @@ source ../params.sh
 
 id=$(basename $(pwd))
 
-uri=$(echo "$1" | cut -c1-$MAX_POSTLEN)
-display="${@:2}"
+uri=$(echo "$@" | cut -c1-$MAX_POSTLEN)
+display=$(echo "$uri" | cut -c1-70)
 
 if echo "$uri" | grep -v -e '^.*://.*'
 then
 	uri="http://$uri"
-fi
-
-if [ ! "$display" ]
-then
-	display=$(echo "$uri" | cut -c1-70)
 fi
 
 post=$(date +%s)
