@@ -74,6 +74,9 @@ _____________________________________________________________________
 	what connections you make or what kinds of files you are
 	storing on your server, disable this!
 
+    MAX_IMAGE
+        Maximum dimensions of an uploaded image (WxH).
+
 
 DELETING A THREAD OR POST
 _____________________________________________________________________
