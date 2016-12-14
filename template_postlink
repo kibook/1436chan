@@ -38,7 +38,7 @@ case $proto in
 	"")		printf "3Invalid URL: $url	fake	(NULL)	0\r\n"
 			printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
 			exit;;
-	"gopher")	comment=$(../guri "$uri" "$display");;
+	"gopher")	comment=$(../guri "$proto://$uri" "$display");;
 	*)		comment="h$display	URL:$proto://$uri	$SERVER_HOST	$SERVER_PORT"
 esac
 
