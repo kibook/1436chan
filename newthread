@@ -51,8 +51,7 @@ else
 
 		ln template_gophermap $post/gophermap
 		ln template_post $post/post
-		ln template_postres $post/postres
-		ln template_posthttp $post/posthttp
+		ln template_postlink $post/postlink
 		ln template_postfile $post/postfile
 		ln template_postsplr $post/postsplr
 		ln template_postfileb64 $post/postfileb64

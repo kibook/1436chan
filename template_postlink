@@ -1,0 +1,61 @@
+#!/bin/bash
+
+cd "${0%/*}"
+
+if [ ! -e "../params.sh" ]
+then
+	exit
+fi
+
+source ../params.sh
+
+id=$(basename $(pwd))
+
+post=$(date +%s)
+
+url=$(echo "$@" | cut -c1-$MAX_POSTLEN)
+
+if [[ "$url" != *"://"* ]]
+then
+	printf "3Invalid URL: $url	fake	(NULL)	0\r\n"
+	printf "iYou must include the protocol (http://, gopher://, etc.)	fake	(NULL)	0\r\n"
+	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+	exit
+fi
+
+proto="${url%://*}"
+uri="${url#*://}"
+
+if [[ "$proto" == *" "* ]]
+then
+	display=$(echo "$proto" | rev | cut -f 2- -d ' ' | rev)
+	proto=$(echo "$proto" | rev | cut -f 1 -d ' ' | rev)
+else
+	display="$url"
+fi
+
+case $proto in
+	"")		printf "3Invalid URL: $url	fake	(NULL)	0\r\n"
+			printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+			exit;;
+	"gopher")	comment=$(../guri "$url" "$display");;
+	*)		comment="h$display	URL:$proto://$uri	$SERVER_HOST	$SERVER_PORT"
+esac
+
+if [[ ! "$comment" ]]
+then
+	printf "3Post failed.	fake	(NULL)	0\r\n"
+	printf "iInvalid URL:	fake	(NULL)	0\r\n"
+	printf "i$url	fake	(NULL)	0\r\n"
+else
+	echo "$comment" > $post
+
+	if [ -e $post ]
+	then
+		printf "iPost successfuly!	fake	(NULL)	0\r\n"
+	else
+		printf "3Could not post.	fake	(NULL)	0\r\n"
+	fi
+fi
+
+printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"

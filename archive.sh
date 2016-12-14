@@ -3,8 +3,7 @@
 echo $(date +%s) >  $1/archive
 
 rm -f $1/post
-rm -f $1/postres
-rm -f $1/posthttp
+rm -f $1/postlink
 rm -f $1/postfile
 rm -f $1/postsplr
 rm -f $1/postfileb64

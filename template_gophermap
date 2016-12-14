@@ -61,8 +61,7 @@ done
 ../gophermaputil <<EOF
 7Reply	$REQUEST/post	$SERVER_HOST	$SERVER_PORT
 
-7Reply with Gopher link	$REQUEST/postres	$SERVER_HOST	$SERVER_PORT
-7Reply with HTTP link	$REQUEST/posthttp	$SERVER_HOST	$SERVER_PORT
+7Reply with link	$REQUEST/postlink	$SERVER_HOST	$SERVER_PORT
 EOF
 
 if [ $MAX_UPLOAD -gt 0 ]

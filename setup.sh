@@ -82,15 +82,13 @@ do
 	if [ -e $thread/post ]
 	then
 		rm -f $thread/post
-		rm -f $thread/postres
-		rm -f $thread/posthttp
+		rm -f $thread/postlink
 		rm -f $thread/postfile
 		rm -f $thread/postsplr
 		rm -f $thread/postfileb64
 
 		ln template_post $thread/post
-		ln template_postres $thread/postres
-		ln template_posthttp $thread/posthttp
+		ln template_postlink $thread/postlink
 		ln template_postfile $thread/postfile
 		ln template_postsplr $thread/postsplr
 		ln template_postfileb64 $thread/postfileb64
@@ -108,15 +106,13 @@ do
 	if [ -e $thread/post ]
 	then
 		rm -f $thread/post
-		rm -f $thread/postres
-		rm -f $thread/posthttp
+		rm -f $thread/postlink
 		rm -f $thread/postfile
 		rm -f $thread/postsplr
 		rm -f $thread/postfileb64
 
 		ln template_post $thread/post
-		ln template_postres $thread/postres
-		ln template_posthttp $thread/posthttp
+		ln template_postlink $thread/postlink
 		ln template_postfile $thread/postfile
 		ln template_postsplr $thread/postsplr
 		ln template_postfileb64 $thread/postfileb64
