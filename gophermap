@@ -52,7 +52,22 @@ do
 			i=$((npost-nlast))
 			for post in $lastposts
 			do
-				printf "i__[#%.3d $(date -d @$post +"$DATE_FORMAT") @$post]_______________________\tfake\t(NULL)\t0\r\n" "$i"
+				posted=$(date -d @$post +"$DATE_FORMAT")
+
+				#no=1
+				#for p in $(ls -tr ../*/[0-9]* 2>/dev/null)
+				#do
+				#	if [[ "$(basename $p)" == "$post" ]]
+				#	then
+				#		break
+				#	else
+				#		no=$(($no + 1))
+				#	fi
+				#done
+
+				header=$(printf "i__[#%.3d %s @%s]____________________________________" $i "$posted" $post | cut -c1-68)
+				printf "$header	fake	(NULL)	0\r\n"
+
 				lastcomment=$(cat $post)
 				if echo "$lastcomment" | grep -q "	"
 				then
