@@ -75,7 +75,8 @@ _____________________________________________________________________
 	storing on your server, disable this!
 
     MAX_IMAGE
-        Maximum dimensions of an uploaded image (WxH).
+        Maximum dimensions of an uploaded image (WxH). Leave blank
+	to disable.
 
 
 DELETING A THREAD OR POST

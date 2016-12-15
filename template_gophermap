@@ -38,6 +38,7 @@ EOF
 	fi
 fi
 
+pad=$(printf "_%.0s" {1..70})
 i=1
 
 for file in $(ls [0-9]* 2>/dev/null)
@@ -55,7 +56,7 @@ do
 	#	fi
 	#done
 
-	header=$(printf "__[#%.3d %s @%s]__________________________________________" $i "$posted" $file | cut -c1-69)
+	header=$(printf "__[#%.3d %s @%s]%s" $i "$posted" $file "$pad" | cut -c1-69)
 	printf "i$header	fake	(NULL)	0\r\n"
 
 	while read line
