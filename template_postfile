@@ -40,10 +40,10 @@ uri="${url##*://}"
 
 if [[ "$proto" == *" "* ]]
 then
-	dis=$(echo "$proto" | rev | cut -f 2- -d ' ' | rev)
+	dis=$(echo "$proto" | rev | cut -f 2- -d ' ' | rev | cut -c1-69)
 	proto=$(echo "$proto" | rev | cut -f 1 -d ' ' | rev)
 else
-	dis=$(echo "$url" | cut -c1-68)
+	dis=$(echo "$url" | cut -c1-69)
 fi
 
 if [[ ! "$proto" ]]

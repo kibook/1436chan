@@ -28,10 +28,10 @@ uri="${url##*://}"
 
 if [[ "$proto" == *" "* ]]
 then
-	display=$(echo "$proto" | rev | cut -f 2- -d ' ' | rev | cut -c1-68)
+	display=$(echo "$proto" | rev | cut -f 2- -d ' ' | rev | cut -c1-69)
 	proto=$(echo "$proto" | rev | cut -f 1 -d ' ' | rev)
 else
-	display=$(echo "$url" | cut -c1-68)
+	display=$(echo "$url" | cut -c1-69)
 fi
 
 case $proto in

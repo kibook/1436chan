@@ -55,8 +55,8 @@ do
 	#	fi
 	#done
 
-	header=$(printf "i__[#%.3d %s @%s]__________________________________________" $i "$posted" $file | cut -c1-69)
-	printf "$header	fake	(NULL)	0\r\n"
+	header=$(printf "__[#%.3d %s @%s]__________________________________________" $i "$posted" $file | cut -c1-69)
+	printf "i$header	fake	(NULL)	0\r\n"
 
 	while read line
 	do
@@ -67,7 +67,7 @@ do
 			while read fmtline
 			do
 				printf "i%s	fake	(NULL)	0\r\n" "$fmtline"
-			done < <(echo "$line" | fmt -68)
+			done < <(echo "$line" | fmt -69)
 		fi
 	done < $file
 

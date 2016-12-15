@@ -33,7 +33,7 @@ then
 	disp="untitled"
 fi
 
-disp=$(echo "$disp" | cut -c1-68)
+disp=$(echo "$disp" | cut -c1-69)
 
 size="${#data}"
 
