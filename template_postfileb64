@@ -33,6 +33,8 @@ then
 	disp="untitled"
 fi
 
+disp=$(echo "$disp" | cut -c1-68)
+
 size="${#data}"
 
 if [ ! "$size" ]

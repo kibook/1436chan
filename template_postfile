@@ -43,7 +43,7 @@ then
 	dis=$(echo "$proto" | rev | cut -f 2- -d ' ' | rev)
 	proto=$(echo "$proto" | rev | cut -f 1 -d ' ' | rev)
 else
-	dis=$(echo "$url" | cut -c1-70)
+	dis=$(echo "$url" | cut -c1-68)
 fi
 
 if [[ ! "$proto" ]]

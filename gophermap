@@ -65,21 +65,24 @@ do
 				#	fi
 				#done
 
-				header=$(printf "i__[#%.3d %s @%s]____________________________________" $i "$posted" $post | cut -c1-68)
+				header=$(printf "i__[#%.3d %s @%s]____________________________________" $i "$posted" $post | cut -c1-69)
 				printf "$header	fake	(NULL)	0\r\n"
 
-				lastcomment=$(cat $post)
-				if echo "$lastcomment" | grep -q "	"
-				then
-					printf "$lastcomment\r\n"
-				else
-					lastcomment=`echo "$lastcomment" | fmt -67`
-					while read line
-					do
-						printf "i$line	fake	(NULL)	0\r\n"
-					done < <(echo "$lastcomment")
-				fi
+				while read line
+				do
+					if echo "$line" | grep -q "	"
+					then
+						printf "%s\r\n" "$line"
+					else
+						while read fmtline
+						do
+							printf "i%s	fake	(NULL)	0\r\n" "$fmtline"
+						done < <(echo "$line" | fmt -68)
+					fi
+				done < $post
+
 				printf "i	fake	(NULL)	0\r\n"
+
 				i=$((i+1))
 			done
 
