@@ -9,6 +9,8 @@ if [ "$CONT" = "y" ]
 then
 	rm -rf [0-9]*
 	rm -rf sticky_*
+	rm -f threads
+	rm -f posts
 else
 	echo "Aborted."
 fi

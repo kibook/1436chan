@@ -74,7 +74,7 @@ echo "MAX_IMAGE=$MAX_IMAGE" >> params.sh
 chmod -f g+w .
 chmod -f g+s .
 
-# fix links, setup archive
+# fix links
 for thread in $(ls -dtr [0-9]* 2>/dev/null)
 do
 	rm -f $thread/gophermap
@@ -122,6 +122,17 @@ do
 		ln template_readonly_gophermap $thread/gophermap
 	fi
 done
+
+# setup state files
+if [ ! -e threads ]
+then
+	echo 0 > threads
+fi
+if [ ! -e posts ]
+then
+	echo 0 > posts
+fi
+chmod -f g+w threads posts
 
 # additional permissions
 chmod -f g+w template_*
