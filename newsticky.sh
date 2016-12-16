@@ -1,7 +1,15 @@
 #!/bin/bash
 
 stamp=$(date +%s)
-no=$(($(ls -d [0-9]* | wc -l) + 1))
+
+if [[ -e posts ]]
+then
+	no=$(cat posts)
+else
+	no=0
+fi
+no=$(($no + 1))
+
 thread="$stamp"_"$no"
 
 mkdir sticky_$thread
