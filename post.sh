@@ -1,8 +1,12 @@
+#!/bin/bash
+timestamp=`date +%s`
+
 thread="$1"
 
-stamp=$(date +%s)
-no=$(($(ls [0-9]*/[0-9]* | wc -l) + 1))
-post="$stamp"_"$no"
+if [ ! "$thread" ]
+then
+	thread="."
+fi
 
-touch $thread/$post
-vi $thread/$post
+touch $thread/$timestamp
+"${EDITOR:-vi}" $thread/$timestamp

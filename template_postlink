@@ -11,10 +11,7 @@ source ../params.sh
 
 id=$(basename $(pwd))
 
-
-stamp=$(date +%s)
-no=$(($(ls ../[0-9]*/[0-9]* | wc -l) + 1))
-post="$stamp"_"$no"
+post=$(date +%s)
 
 url=$(echo "$@" | cut -c1-$MAX_POSTLEN)
 

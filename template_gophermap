@@ -5,9 +5,6 @@ cd "${0%/*}"
 thread=$(basename $(pwd))
 thread="${thread#sticky_*}"
 
-threadstamp="${thread%_*}"
-threadno="${thread#*_}"
-
 if [[ ! -e "../params.sh" ]]
 then
 	exit
@@ -18,7 +15,7 @@ source ../params.sh
 ../gophermaputil <<EOF
 1Return	$CHAN_ROOT	$SERVER_HOST	$SERVER_PORT
 
-$(date -d @$threadstamp +"$DATE_FORMAT")
+$(date -d @$thread +"$DATE_FORMAT")
 _____________________________________________________________________
 $(cat gophertag)
 _____________________________________________________________________
@@ -44,13 +41,22 @@ fi
 pad=$(printf "_%.0s" {1..70})
 i=1
 
-for file in $(ls -v [0-9]* 2>/dev/null)
+for file in $(ls [0-9]* 2>/dev/null)
 do
-	stamp="${file%_*}"
-	no="${file#*_}"
-	posted=$(date -d @$stamp +"$DATE_FORMAT")
+	posted=$(date -d @$file +"$DATE_FORMAT")
 
-	header=$(printf "__[%s No.%d]%s" "$posted" $no "$pad" | cut -c1-69)
+	#no=1
+	#for post in $(ls -tr ../*/[0-9]* 2>/dev/null)
+	#do
+	#	if [[ "$(basename $post)" == "$file" ]]
+	#	then
+	#		break
+	#	else
+	#		no=$(($no + 1))
+	#	fi
+	#done
+
+	header=$(printf "__[#%.3d %s @%s]%s" $i "$posted" $file "$pad" | cut -c1-69)
 	printf "i$header	fake	(NULL)	0\r\n"
 
 	while read line

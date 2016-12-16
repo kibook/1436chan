@@ -13,10 +13,7 @@ id=$(basename $(pwd))
 
 comment="$@"
 len=${#comment}
-
-stamp=$(date +%s)
-no=$(($(ls ../[0-9]*/[0-9]* | wc -l) + 1))
-post="$stamp"_"$no"
+post=$(date +%s)
 
 if [[ "$comment" = "" ]]
 then

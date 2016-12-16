@@ -34,18 +34,15 @@ for thread in $(ls -td [0-9]* 2>/dev/null)
 do
 	cd $thread
 
-	threadstamp="${thread%_*}"
-	threadno="${thread#*_}"
-
 	if [[ ! -e archive ]]
 	then
-		lastposts=$(ls -v [0-9]* 2>/dev/null | tail -n $LAST_POSTS)
+		lastposts=$(ls [0-9]* 2>/dev/null | tail -n $LAST_POSTS)
 		npost=$(ls [0-9]* 2> /dev/null | wc -l)
 		nlast=$(echo -n "$lastposts" | wc -l)
 
 		if [[ $npost -gt 0 || "$SHOW_EMPTY_THREADS" = "y" ]]
 		then
-			printf "1[No.%d] %s (%d " $threadno "$(cat gophertag)" $npost
+			printf "1[@$thread] $(cat gophertag) ($npost "
 			if [ $npost -eq 1 ]
 			then
 				printf "post"
@@ -57,11 +54,20 @@ do
 			i=$((npost-nlast))
 			for post in $lastposts
 			do
-				stamp="${post%_*}"
-				no="${post#*_}"
-				posted=$(date -d @$stamp +"$DATE_FORMAT")
+				posted=$(date -d @$post +"$DATE_FORMAT")
 
-				header=$(printf "__[%s No.%d]%s" "$posted" $no "$pad" | cut -c1-69)
+				#no=1
+				#for p in $(ls -tr ../*/[0-9]* 2>/dev/null)
+				#do
+				#	if [[ "$(basename $p)" == "$post" ]]
+				#	then
+				#		break
+				#	else
+				#		no=$(($no + 1))
+				#	fi
+				#done
+
+				header=$(printf "__[#%.3d %s @%s]%s" $i "$posted" $post "$pad" | cut -c1-69)
 				printf "i$header	fake	(NULL)	0\r\n"
 
 				while read line

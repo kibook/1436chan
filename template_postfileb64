@@ -23,8 +23,6 @@ fi
 
 id=$(basename $(pwd))
 
-stamp=$(date +%s)
-no=$(($(ls ../[0-9]*/[0-9]* | wc -l) + 1))
 post=$(date +%s)
 
 data="$1"
