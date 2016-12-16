@@ -87,14 +87,17 @@ _____________________________________________________________________
         rm -r <thread>
 
     where <thread> is the id of the thread. For normal threads this
-    is the Unix timestamp when it was created. For stickies this is
-    the prefix sticky_ plus the Unix timestamp.
+    is the Unix timestamp when the thread was created plus the
+    number of the thread separated by an underscore. For stickies,
+    this includes the prefix "sticky_".
 
     To delete a post (from the root folder):
 
        rm <thread>/<post>
 
-  where <post> is the id number of the post in <thread>.
+  where <post> is the id number of the post in <thread>. That is
+  the Unix timestamp when the post was made plus the number of the
+  post separated by and underscore.
 
 
 MESSAGE OF THE DAY
