@@ -23,7 +23,9 @@ fi
 
 id=$(basename $(pwd))
 
-post=$(date +%s)
+stamp=$(date +%s)
+no=$(($(ls ../[0-9]*/[0-9]* | wc -l) + 1))
+post="$stamp"_"$no"
 
 url=$(echo "$@" | cut -c1-$MAX_POSTLEN)
 
