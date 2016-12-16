@@ -76,13 +76,14 @@ else
 	fi
 
 	case "$mime" in
-		"image/png")	type=p;;
-		"image/jpeg")	type=I;;
-		"image/gif")	type=g;;
-		"audio/wav")	type=s;;
-		"text/html")	type=h;;
-		"text/"*)	type=0;;
-		*)		type=9;;
+		"image/png")	type='p';;
+		"image/jpeg")	type='I';;
+		"image/gif")	type='g';;
+		"audio/wav")	type='s';;
+		"text/html")	type='h';;
+		"text/"*)	type='0';;
+		"video/"*)	type=';';;
+		*)		type='9';;
 	esac
 
 	case "$mime" in
