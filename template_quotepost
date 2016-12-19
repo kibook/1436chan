@@ -75,34 +75,6 @@ no=$(($no + 1))
 
 post="$stamp"_"$no"
 
-case $linktype in
-	thread) echo "1[##${target##*_}] $(cat ../$target/gophertag)	$CHAN_ROOT/$target	$SERVER_HOST	$SERVER_PORT" > $post;;
-	post)	thread="${target%/*}"
-		if [[ "$thread" != "$id" ]]
-		then
-			echo "1#${target##*_} said:	$CHAN_ROOT/$thread	$SERVER_HOST	$SERVER_PORT" > ../$post
-		else
-			echo "#${target##*_} said:" > ../$post
-		fi
-		saveifs="$IFS"
-		IFS=''
-		while read line
-		do
-			if echo "$line" | grep -v -q "	"
-			then
-				while read fmtline
-				do
-					echo "  >$fmtline" >> ../$post
-				done < <(echo "$line" | fmt -68 -s)
-			else
-				kind=$(echo "$line" | head -c 1)
-				rest=$(echo "$line" | tail -c +2)
-				echo "$kind  >$rest" >> ../$post
-			fi
-		done < ../$target
-		IFS="$saveifs"
-esac
-
 name=$(basename "$0")
 
 case $name in
@@ -114,11 +86,40 @@ esac
 
 if [[ $? -ne 0 ]]
 then
-	rm ../$post
 	exit $?
 fi
 
-mv ../$post ./
+case $linktype in
+	thread) echo "1[##${target##*_}] $(cat ../$target/gophertag)	$CHAN_ROOT/$target	$SERVER_HOST	$SERVER_PORT" > q_$post;;
+	post)	thread="${target%/*}"
+		if [[ "$thread" != "$id" ]]
+		then
+			echo "1#${target##*_} said:	$CHAN_ROOT/$thread	$SERVER_HOST	$SERVER_PORT" > q_$post
+		else
+			echo "#${target##*_} said:" > q_$post
+		fi
+		saveifs="$IFS"
+		IFS=''
+		while read line
+		do
+			if echo "$line" | grep -v -q "	"
+			then
+				while read fmtline
+				do
+					echo "  >$fmtline" >> q_$post
+				done < <(echo "$line" | fmt -68 -s)
+			else
+				kind=$(echo "$line" | head -c 1)
+				rest=$(echo "$line" | tail -c +2)
+				echo "$kind  >$rest" >> q_$post
+			fi
+		done < ../$target
+		IFS="$saveifs"
+esac
+
+p=$(cat $post)
+echo "$p" >> q_$post
+mv q_$post $post
 
 if [[ -e $post ]]
 then
