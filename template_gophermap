@@ -86,4 +86,4 @@ then
 fi
 
 printf "7Reply with spoiler	$REQUEST/postsplr	$SERVER_HOST	$SERVER_PORT\r\n"
-printf "7Reply with quote (format: \"[TEXT] #POSTNO\"	$REQUEST/quotepost	$SERVER_HOST	$SERVER_PORT\r\n"
+printf "7Reply with quote (format: \"[TEXT] #POSTNO\")	$REQUEST/quotepost	$SERVER_HOST	$SERVER_PORT\r\n"
