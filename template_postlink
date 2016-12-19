@@ -4,25 +4,29 @@ cd "${0%/*}"
 
 if [ ! -e "../params.sh" ]
 then
-	exit
+	exit 1
 fi
 
 source ../params.sh
 
 id=$(basename $(pwd))
 
-
-stamp=$(date +%s)
-
-if [[ -e ../posts ]]
+if [[ "$CHAN_POST" ]]
 then
-	no=$(cat ../posts)
+	post=$CHAN_POST
 else
-	no=0
-fi
-no=$(($no + 1))
+	stamp=$(date +%s)
 
-post="$stamp"_"$no"
+	if [[ -e ../posts ]]
+	then
+		no=$(cat ../posts)
+	else
+		no=0
+	fi
+	no=$(($no + 1))
+
+	post="$stamp"_"$no"
+fi
 
 url=$(echo "$@" | cut -c1-$MAX_POSTLEN)
 
@@ -31,7 +35,7 @@ then
 	printf "3Invalid URL: $url	fake	(NULL)	0\r\n"
 	printf "iYou must include the protocol (http://, gopher://, etc.)	fake	(NULL)	0\r\n"
 	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
-	exit
+	exit 1
 fi
 
 proto="${url%://*}"
@@ -48,7 +52,7 @@ fi
 case $proto in
 	"")		printf "3Invalid URL: $url	fake	(NULL)	0\r\n"
 			printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
-			exit;;
+			exit 1;;
 	"gopher")	comment=$(../guri "$proto://$uri" "$display");;
 	*)		comment="h$display	URL:$proto://$uri	$SERVER_HOST	$SERVER_PORT"
 esac
@@ -59,7 +63,12 @@ then
 	printf "iInvalid URL:	fake	(NULL)	0\r\n"
 	printf "i$url	fake	(NULL)	0\r\n"
 else
-	echo "$comment" > $post
+	echo "$comment" >> $post
+
+	if [[ "$CHAN_POST" ]]
+	then
+		exit
+	fi
 
 	if [ -e $post ]
 	then

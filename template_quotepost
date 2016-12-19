@@ -37,6 +37,13 @@ else
 	linktype=thread
 fi
 
+if [[ ! "$disp" ]]
+then
+	printf "3You must post a comment.	fake	(NULL)	0\r\n"
+	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+	exit
+fi
+
 case $linktype in
 	thread)	target=$(ls -d ../[0-9]*_$link 2>/dev/null | head -n 1);;
 	post)	target=$(ls ../[0-9]*/[0-9]*_$link 2>/dev/null | head -n 1);;
@@ -66,7 +73,7 @@ else
 fi
 no=$(($no + 1))
 
-post="$stamp"_"$no"
+post=../"$stamp"_"$no"
 
 case $linktype in
 	thread) echo "1[##${target##*_}] $(cat ../$target/gophertag)	$CHAN_ROOT/$target	$SERVER_HOST	$SERVER_PORT" > $post;;
@@ -93,14 +100,26 @@ case $linktype in
 		IFS="$saveifs"
 esac
 
-if [[ "$disp" ]]
+name=$(basename "$0")
+
+case $name in
+	quotepost)	CHAN_POST=$post ./post $disp;;
+	quotepostlink)	CHAN_POST=$post ./postlink $disp;;
+	quotepostfile)	CHAN_POST=$post ./postfile $disp;;
+	quotepostsplr)	CHAN_POST=$post ./postsplr $disp;;
+esac
+
+if [[ $? -ne 0 ]]
 then
-	echo "$disp" >> $post
+	rm $post
+	exit $?
 fi
 
 if [[ -e $post ]]
 then
 	printf "iPost successful!	fake	(NULL)	0\r\n"
+
+	mv $post ./
 
 	echo $no > ../posts
 else

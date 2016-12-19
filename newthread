@@ -71,6 +71,9 @@ else
 		ln template_postsplr $post/postsplr
 		ln template_postfileb64 $post/postfileb64
 		ln template_quotepost $post/quotepost
+		ln template_quotepost $post/quotepostlink
+		ln template_quotepost $post/quotepostfile
+		ln template_quotepost $post/quotepostsplr
 
 		printf "iThread created successfully!	fake	(NULL)	0\r\n"
 		printf "1View thread	$CHAN_ROOT/$post	$SERVER_HOST	$SERVER_PORT\r\n"

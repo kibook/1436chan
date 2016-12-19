@@ -4,7 +4,7 @@ cd "${0%/*}"
 
 if [ ! -e "../params.sh" ]
 then
-	exit
+	exit 1
 fi
 
 source ../params.sh
@@ -14,41 +14,57 @@ id=$(basename $(pwd))
 comment="$@"
 len=${#comment}
 
-stamp=$(date +%s)
-
-if [[ -e ../posts ]]
+if [[ "$CHAN_POST" ]]
 then
-	no=$(cat ../posts)
+	post=$CHAN_POST
 else
-	no=0
-fi
-no=$(($no + 1))
+	stamp=$(date +%s)
 
-post="$stamp"_"$no"
+	if [[ -e ../posts ]]
+	then
+		no=$(cat ../posts)
+	else
+		no=0
+	fi
+	no=$(($no + 1))
+
+	post="$stamp"_"$no"
+fi
 
 if [[ "$comment" = "" ]]
 then
 	printf "3Post failed.	fake	(NULL)	0\r\n"
 	printf "i	fake	(NULL)	0\r\n"
 	printf "iYou must post a comment.	fake	(NULL)	0\r\n"
-elif [[ $len -gt $MAX_POSTLEN ]]
+	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+	exit 1
+fi
+
+if [[ $len -gt $MAX_POSTLEN ]]
 then
 	printf "3Post failed.	fake	(NULL)	0\r\n"
 	printf "i	fake	(NULL)	0\r\n"
 	printf "iComment too long ($len/$MAX_POSTLEN)	fake	(NULL)	0\r\n"
+	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+	exit 1
+fi
+
+echo "$comment" > s_$post
+
+echo "0*SPOILER*	$CHAN_ROOT/$id/s_$post	$SERVER_HOST	$SERVER_PORT" >> $post
+
+if [[ "$CHAN_POST" ]]
+then
+	exit
+fi
+
+if [ -e $post ]
+then
+	printf "iPost successful!	fake	(NULL)	0\r\n"
+
+	echo $no > ../posts
 else
-	echo "$comment" > s_$post
-
-	echo "0*SPOILER*	$CHAN_ROOT/$id/s_$post	$SERVER_HOST	$SERVER_PORT" > $post
-
-	if [ -e $post ]
-	then
-		printf "iPost successful!	fake	(NULL)	0\r\n"
-
-		echo $no > ../posts
-	else
-		printf "3Could not post.	fake	(NULL)	0\r\n"
-	fi
+	printf "3Could not post.	fake	(NULL)	0\r\n"
 fi
 
 printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"

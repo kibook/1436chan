@@ -4,7 +4,7 @@ cd "${0%/*}"
 
 if [ ! "$@" ]
 then
-	exit
+	exit 1
 fi
 
 if [ ! -e ../params.sh ]
@@ -18,22 +18,27 @@ if [ ! $MAX_UPLOAD -gt 0 ]
 then
 	printf "3Uploads are disabled	fake	(NULL)	0\r\n"
 	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
-	exit
+	exit 1
 fi
 
 id=$(basename $(pwd))
 
-stamp=$(date +%s)
-
-if [[ -e ../posts ]]
+if [[ "$CHAN_POST" ]]
 then
-	no=$(cat ../posts)
+	post=$CHAN_POST
 else
-	no=0
-fi
-no=$(($no + 1))
+	stamp=$(date +%s)
 
-post="$stamp"_"$no"
+	if [[ -e ../posts ]]
+	then
+		no=$(cat ../posts)
+	else
+		no=0
+	fi
+	no=$(($no + 1))
+
+	post="$stamp"_"$no"
+fi
 
 url=$(echo "$@" | cut -c1-$MAX_POSTLEN)
 
@@ -42,7 +47,7 @@ then
 	printf "3Invalid URL: $url	fake	(NULL)	0\r\n"
 	printf "iYou must include the protocol (http://, gopher://, etc.)	fake	(NULL)	0\r\n"
 	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
-	exit
+	exit 1
 fi
 
 proto="${url%://*}"
@@ -60,7 +65,7 @@ if [[ ! "$proto" ]]
 then
 	printf "3Invalid URL: $url	fake	(NULL)	0\r\n"
 	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
-	exit
+	exit 1
 fi
 
 res="${uri##*/}"
@@ -122,7 +127,7 @@ else
 				printf "3Image too large ($imgw x $imgh, max $maxw x $maxh)	fake	(NULL)	0\r\n"
 				printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
 				rm -f "$fname"
-				exit
+				exit 1
 			fi
 		fi
 
@@ -159,7 +164,12 @@ else
 
 		cd $id
 
-		printf "$type$dis	$CHAN_ROOT/$id/$fname	$SERVER_HOST	$SERVER_PORT\r\n" > $post
+		printf "$type$dis	$CHAN_ROOT/$id/$fname	$SERVER_HOST	$SERVER_PORT\r\n" >> $post
+
+		if [[ "$CHAN_POST" ]]
+		then
+			exit
+		fi
 
 		if [ -e $post ]
 		then

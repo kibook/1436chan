@@ -15,29 +15,22 @@ fi
 
 source ../params.sh
 
-../gophermaputil <<EOF
-1Return	$CHAN_ROOT	$SERVER_HOST	$SERVER_PORT
+printf "1Return	$CHAN_ROOT	$SERVER_HOST	$SERVER_PORT\r\n"
+printf "i	fake	(NULL)	0\r\n"
 
-$(date -d @$threadstamp +"$DATE_FORMAT")
-_____________________________________________________________________
-[##$threadno] $(cat gophertag)
-_____________________________________________________________________
-
-EOF
+printf "i$(date -d @$threadstamp +"$DATE_FORMAT")	fake	(NULL)	0\r\n"
+printf "i_____________________________________________________________________	fake	(NULL)	0\r\n"
+printf "i[##$threadno] $(cat gophertag)	fake	(NULL)	0\r\n"
+printf "i_____________________________________________________________________	fake	(NULL)	0\r\n"
 
 if [[ $(ls [0-9]* 2>/dev/null | wc -l) -eq 0 ]]
 then
-	../gophermaputil <<EOF
-This is a new thread. Create an opening post using Reply.
+	printf "This is a new thread. Create an opening post using Reply.	fake	(NULL)	0\r\n"
 
-EOF
 	if [[ "$SHOW_EMPTY_THREADS" != "y" ]]
 	then
-		../gophermaputil <<EOF
-New threads will not appear on the main menu until they have an
-opening post!
-
-EOF
+		printf "iNew threads will not appear on the main menu until they have an	fake	(NULL)	0\r\n"
+		printf "iopening post!	fake	(NULL)	0\r\n"
 	fi
 fi
 
@@ -74,11 +67,8 @@ do
 	i=$((i+1))
 done
 
-../gophermaputil <<EOF
-7Reply	$REQUEST/post	$SERVER_HOST	$SERVER_PORT
-
-7Reply with link	$REQUEST/postlink	$SERVER_HOST	$SERVER_PORT
-EOF
+printf "7Reply	$REQUEST/post	$SERVER_HOST	$SERVER_PORT\r\n"
+printf "7Reply with link	$REQUEST/postlink	$SERVER_HOST	$SERVER_PORT\r\n"
 
 if [ $MAX_UPLOAD -gt 0 ]
 then
@@ -86,4 +76,9 @@ then
 fi
 
 printf "7Reply with spoiler	$REQUEST/postsplr	$SERVER_HOST	$SERVER_PORT\r\n"
-printf "7Reply with quote (format: \"[TEXT] #POSTNO\")	$REQUEST/quotepost	$SERVER_HOST	$SERVER_PORT\r\n"
+
+printf "i	fake	(NULL)	0\r\n"
+printf "7Quote post and reply	$REQUEST/quotepost	$SERVER_HOST	$SERVER_PORT\r\n"
+printf "7Quote post and reply with link	$REQUEST/quotepostlink	$SERVER_HOST	$SERVER_PORT\r\n"
+printf "7Quote post and upload image/file from URL	$REQUEST/quotepostfile	$SERVER_HOST	$SERVER_PORT\r\n"
+printf "7Quote post and reply with spoiler	$REQUEST/quotepostsplr	$SERVER_HOST	$SERVER_PORT\r\n"
