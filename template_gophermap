@@ -25,7 +25,7 @@ printf "i_____________________________________________________________________	f
 
 if [[ $(ls [0-9]* 2>/dev/null | wc -l) -eq 0 ]]
 then
-	printf "This is a new thread. Create an opening post using Reply.	fake	(NULL)	0\r\n"
+	printf "iThis is a new thread. Create an opening post using Reply.	fake	(NULL)	0\r\n"
 
 	if [[ "$SHOW_EMPTY_THREADS" != "y" ]]
 	then
