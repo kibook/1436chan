@@ -49,7 +49,7 @@ then
 	exit 1
 fi
 
-echo "$comment" > s_$post
+echo "$comment" > ../s_$post
 
 echo "0*SPOILER*	$CHAN_ROOT/$id/s_$post	$SERVER_HOST	$SERVER_PORT" >> $post
 
@@ -62,9 +62,13 @@ if [ -e $post ]
 then
 	printf "iPost successful!	fake	(NULL)	0\r\n"
 
+	mv ../s_$post ./
+
 	echo $no > ../posts
 else
 	printf "3Could not post.	fake	(NULL)	0\r\n"
+
+	rm ../s_$post
 fi
 
 printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
