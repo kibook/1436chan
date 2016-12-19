@@ -73,16 +73,16 @@ else
 fi
 no=$(($no + 1))
 
-post=../"$stamp"_"$no"
+post="$stamp"_"$no"
 
 case $linktype in
 	thread) echo "1[##${target##*_}] $(cat ../$target/gophertag)	$CHAN_ROOT/$target	$SERVER_HOST	$SERVER_PORT" > $post;;
 	post)	thread="${target%/*}"
 		if [[ "$thread" != "$id" ]]
 		then
-			echo "1#${target##*_} said:	$CHAN_ROOT/$thread	$SERVER_HOST	$SERVER_PORT" > $post
+			echo "1#${target##*_} said:	$CHAN_ROOT/$thread	$SERVER_HOST	$SERVER_PORT" > ../$post
 		else
-			echo "#${target##*_} said:" > $post
+			echo "#${target##*_} said:" > ../$post
 		fi
 		saveifs="$IFS"
 		IFS=''
@@ -92,12 +92,12 @@ case $linktype in
 			then
 				while read fmtline
 				do
-					echo "  >$fmtline" >> $post
+					echo "  >$fmtline" >> ../$post
 				done < <(echo "$line" | fmt -68 -s)
 			else
 				kind=$(echo "$line" | head -c 1)
 				rest=$(echo "$line" | tail -c +2)
-				echo "$kind  >$rest" >> $post
+				echo "$kind  >$rest" >> ../$post
 			fi
 		done < ../$target
 		IFS="$saveifs"
@@ -114,15 +114,15 @@ esac
 
 if [[ $? -ne 0 ]]
 then
-	rm $post
+	rm ../$post
 	exit $?
 fi
+
+mv ../$post ./
 
 if [[ -e $post ]]
 then
 	printf "iPost successful!	fake	(NULL)	0\r\n"
-
-	mv $post ./
 
 	echo $no > ../posts
 else
