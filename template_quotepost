@@ -90,7 +90,10 @@ case $linktype in
 		do
 			if echo "$line" | grep -v -q "	"
 			then
-				echo "  >$line" >> $post
+				while read fmtline
+				do
+					echo "  >$fmtline" >> $post
+				done < <(echo "$line" | fmt -68 -s)
 			else
 				kind=$(echo "$line" | head -c 1)
 				rest=$(echo "$line" | tail -c +2)
