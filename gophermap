@@ -45,7 +45,7 @@ do
 
 		if [[ $npost -gt 0 || "$SHOW_EMPTY_THREADS" = "y" ]]
 		then
-			printf "1[No.%d] %s (%d " $threadno "$(cat gophertag)" $npost
+			printf "1[##%d] %s (%d " $threadno "$(cat gophertag)" $npost
 			if [ $npost -eq 1 ]
 			then
 				printf "post"
@@ -61,9 +61,11 @@ do
 				no="${post#*_}"
 				posted=$(date -d @$stamp +"$DATE_FORMAT")
 
-				header=$(printf "__[%s No.%d]%s" "$posted" $no "$pad" | cut -c1-69)
+				header=$(printf "__[%s #%d]%s" "$posted" $no "$pad" | cut -c1-69)
 				printf "i$header	fake	(NULL)	0\r\n"
 
+				saveifs="$IFS"
+				IFS=''
 				while read line
 				do
 					if echo "$line" | grep -q "	"
@@ -76,6 +78,7 @@ do
 						done < <(echo "$line" | fmt -69)
 					fi
 				done < $post
+				IFS="$saveifs"
 
 				printf "i	fake	(NULL)	0\r\n"
 

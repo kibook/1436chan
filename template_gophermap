@@ -20,7 +20,7 @@ source ../params.sh
 
 $(date -d @$threadstamp +"$DATE_FORMAT")
 _____________________________________________________________________
-$(cat gophertag)
+[##$threadno] $(cat gophertag)
 _____________________________________________________________________
 
 EOF
@@ -50,9 +50,11 @@ do
 	no="${file#*_}"
 	posted=$(date -d @$stamp +"$DATE_FORMAT")
 
-	header=$(printf "__[%s No.%d]%s" "$posted" $no "$pad" | cut -c1-69)
+	header=$(printf "__[%s #%d]%s" "$posted" $no "$pad" | cut -c1-69)
 	printf "i$header	fake	(NULL)	0\r\n"
 
+	saveifs="$IFS"
+	IFS=''
 	while read line
 	do
 		if echo "$line" | grep -q "	"
@@ -65,6 +67,7 @@ do
 			done < <(echo "$line" | fmt -69)
 		fi
 	done < $file
+	IFS="$saveifs"
 
 	printf "i	fake	(NULL)	0\r\n"
 
@@ -83,3 +86,4 @@ then
 fi
 
 printf "7Reply with spoiler	$REQUEST/postsplr	$SERVER_HOST	$SERVER_PORT\r\n"
+printf "7Reply with quote	$REQUEST/quotepost	$SERVER_HOST	$SERVER_PORT\r\n"

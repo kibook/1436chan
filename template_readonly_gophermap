@@ -49,7 +49,7 @@ do
 	no="${file#*_}"
 	posted=$(date -d @$stamp +"$DATE_FORMAT")
 
-	header=$(printf "__[%s No.%d]_______________________________________________" "$posted" $no | cut -c1-69)
+	header=$(printf "__[%s #%d]_______________________________________________" "$posted" $no | cut -c1-69)
 
 	printf "i$header	fake	(NULL)	0\r\n"
 
