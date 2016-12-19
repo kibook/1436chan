@@ -25,7 +25,7 @@ then
 
 	if [[ "$disp" == "$query" ]]
 	then
-		printf "3Invalid parameters.	fake	(NULL)	0\r\n"
+		printf "3No post number (#...) or thread number (##...) specified.	fake	(NULL)	0\r\n"
 		printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
 		exit
 	else
