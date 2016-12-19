@@ -72,16 +72,20 @@ done
 
 printf "7Reply	$REQUEST/post	$SERVER_HOST	$SERVER_PORT\r\n"
 printf "7Reply with link	$REQUEST/postlink	$SERVER_HOST	$SERVER_PORT\r\n"
-
 if [ $MAX_UPLOAD -gt 0 ]
 then
 	printf "7Upload image/file from URL (max $(($MAX_UPLOAD / 1000)) kB)	$REQUEST/postfile	$SERVER_HOST	$SERVER_PORT\r\n"
 fi
-
 printf "7Reply with spoiler	$REQUEST/postsplr	$SERVER_HOST	$SERVER_PORT\r\n"
 
-printf "i	fake	(NULL)	0\r\n"
-printf "7Quote post and reply	$REQUEST/quotepost	$SERVER_HOST	$SERVER_PORT\r\n"
-printf "7Quote post and reply with link	$REQUEST/quotepostlink	$SERVER_HOST	$SERVER_PORT\r\n"
-printf "7Quote post and upload image/file from URL	$REQUEST/quotepostfile	$SERVER_HOST	$SERVER_PORT\r\n"
-printf "7Quote post and reply with spoiler	$REQUEST/quotepostsplr	$SERVER_HOST	$SERVER_PORT\r\n"
+if [[ "$1" == "allreply" ]]
+then
+	printf "i	fake	(NULL)	0\r\n"
+	printf "7Quote post and reply	$REQUEST/quotepost	$SERVER_HOST	$SERVER_PORT\r\n"
+	printf "7Quote post and reply with link	$REQUEST/quotepostlink	$SERVER_HOST	$SERVER_PORT\r\n"
+	printf "7Quote post and upload image/file from URL	$REQUEST/quotepostfile	$SERVER_HOST	$SERVER_PORT\r\n"
+	printf "7Quote post and reply with spoiler	$REQUEST/quotepostsplr	$SERVER_HOST	$SERVER_PORT\r\n"
+	printf "1Show less reply options	$REQUEST	$SERVER_HOST	$SERVER_PORT\r\n"
+else
+	printf "1Show more reply options	$REQUEST?allreply	$SERVER_HOST	$SERVER_PORT\r\n"
+fi
