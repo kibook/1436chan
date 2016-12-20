@@ -97,6 +97,8 @@ do
 	else
 		ln template_readonly_gophermap $thread/gophermap
 	fi
+
+	touch $thread
 done
 
 for thread in $(ls -dtr sticky_* 2>/dev/null)
@@ -121,6 +123,8 @@ do
 	else
 		ln template_readonly_gophermap $thread/gophermap
 	fi
+
+	touch $thread
 done
 
 # setup state files
