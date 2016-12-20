@@ -20,7 +20,7 @@ do
 	printf "1[sticky] $(cat $sticky/gophertag)	$CHAN_ROOT/$sticky	$SERVER_HOST	$SERVER_PORT\r\n"
 done
 
-if [[ $(ls sticky_* 2>/dev/null | wc -l) -gt 0 ]]
+if [[ $(ls -td sticky_* 2>/dev/null | wc -l) -gt 0 ]]
 then
 	printf "i	fake	(NULL)	0\r\n"
 fi
