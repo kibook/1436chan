@@ -17,7 +17,7 @@ do
 
 	if [[ -e archive ]]
 	then
-		printf "1[thread] %s (%s)	$CHAN_ROOT/$thread	$SERVER_HOST	$SERVER_PORT\r\n" "$(cat gophertag)" $(date @$stamp +"$DATE_FORMAT")
+		printf "1[thread] %s (%s)	$CHAN_ROOT/$thread	$SERVER_HOST	$SERVER_PORT\r\n" "$(cat gophertag)" $(date -d @$stamp +"$DATE_FORMAT")
 	fi
 
 	cd ..
