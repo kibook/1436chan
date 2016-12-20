@@ -45,7 +45,7 @@ do
 
 		if [[ $npost -gt 0 || "$SHOW_EMPTY_THREADS" = "y" ]]
 		then
-			printf "1[##%d] %s (%d " $threadno "$(cat gophertag)" $npost
+			printf "1[thread] %s (%d " "$(cat gophertag)" $npost
 			if [ $npost -eq 1 ]
 			then
 				printf "post"

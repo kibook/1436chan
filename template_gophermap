@@ -18,9 +18,9 @@ source ../params.sh
 printf "1Return	$CHAN_ROOT	$SERVER_HOST	$SERVER_PORT\r\n"
 printf "i	fake	(NULL)	0\r\n"
 
-printf "i$(date -d @$threadstamp +"$DATE_FORMAT")	fake	(NULL)	0\r\n"
+printf "i##$threadno $(date -d @$threadstamp +"$DATE_FORMAT")	fake	(NULL)	0\r\n"
 printf "i_____________________________________________________________________	fake	(NULL)	0\r\n"
-printf "i[##$threadno] $(cat gophertag)	fake	(NULL)	0\r\n"
+printf "i$(cat gophertag)	fake	(NULL)	0\r\n"
 printf "i_____________________________________________________________________	fake	(NULL)	0\r\n"
 printf "i	fake	(NULL)	0\r\n"
 
