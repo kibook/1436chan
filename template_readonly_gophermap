@@ -32,6 +32,8 @@ then
 	printf " (archived $(date -d @$archivedate +"$DATE_FORMAT"))"
 fi
 
+printf "	fake	(NULL)	0\r\n"
+
 ../gophermaputil <<EOF
 _____________________________________________________________________
 $(cat gophertag)
