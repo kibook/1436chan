@@ -23,22 +23,17 @@ fi
 
 id=$(basename $(pwd))
 
-if [[ "$CHAN_POST" ]]
+stamp=$(date +%s)
+
+if [[ -e ../posts ]]
 then
-	post=$CHAN_POST
+	no=$(cat ../posts)
 else
-	stamp=$(date +%s)
-
-	if [[ -e ../posts ]]
-	then
-		no=$(cat ../posts)
-	else
-		no=0
-	fi
-	no=$(($no + 1))
-
-	post="$stamp"_"$no"
+	no=0
 fi
+no=$(($no + 1))
+
+post="$stamp"_"$no"
 
 url=$(echo "$@" | cut -c1-$MAX_POSTLEN)
 
@@ -165,11 +160,6 @@ else
 		cd $id
 
 		printf "$type$dis	$CHAN_ROOT/$id/$fname	$SERVER_HOST	$SERVER_PORT\r\n" >> $post
-
-		if [[ "$CHAN_POST" ]]
-		then
-			exit
-		fi
 
 		if [ -e $post ]
 		then

@@ -14,22 +14,17 @@ id=$(basename $(pwd))
 comment="$@"
 len=${#comment}
 
-if [[ "$CHAN_POST" ]]
+stamp=$(date +%s)
+
+if [[ -e ../posts ]]
 then
-	post=$CHAN_POST
+	no=$(cat ../posts)
 else
-	stamp=$(date +%s)
-
-	if [[ -e ../posts ]]
-	then
-		no=$(cat ../posts)
-	else
-		no=0
-	fi
-	no=$(($no + 1))
-
-	post="$stamp"_"$no"
+	no=0
 fi
+no=$(($no + 1))
+
+post="$stamp"_"$no"
 
 if [[ "$comment" = "" ]]
 then
@@ -52,11 +47,6 @@ fi
 echo "$comment" > ../s_$post
 
 echo "0*SPOILER*	$CHAN_ROOT/$id/s_$post	$SERVER_HOST	$SERVER_PORT" >> $post
-
-if [[ "$CHAN_POST" ]]
-then
-	exit
-fi
 
 if [ -e $post ]
 then

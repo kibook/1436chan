@@ -86,20 +86,12 @@ do
 		rm -f $thread/postfile
 		rm -f $thread/postsplr
 		rm -f $thread/postfileb64
-		rm -f $thread/quotepost
-		rm -f $thread/quotepostlink
-		rm -f $thread/quotepostfile
-		rm -f $thread/quotepostsplr
 
 		ln template_post $thread/post
 		ln template_postlink $thread/postlink
 		ln template_postfile $thread/postfile
 		ln template_postsplr $thread/postsplr
 		ln template_postfileb64 $thread/postfileb64
-		ln template_quotepost $thread/quotepost
-		ln template_quotepost $thread/quotepostlink
-		ln template_quotepost $thread/quotepostfile
-		ln template_quotepost $thread/quotepostsplr
 
 		ln template_gophermap $thread/gophermap
 	else
@@ -118,20 +110,12 @@ do
 		rm -f $thread/postfile
 		rm -f $thread/postsplr
 		rm -f $thread/postfileb64
-		rm -f $thread/quotepost
-		rm -f $thread/quotepostlink
-		rm -f $thread/quotepostfile
-		rm -f $thread/quotepostsplr
 
 		ln template_post $thread/post
 		ln template_postlink $thread/postlink
 		ln template_postfile $thread/postfile
 		ln template_postsplr $thread/postsplr
 		ln template_postfileb64 $thread/postfileb64
-		ln template_quotepost $thread/quotepost
-		ln template_quotepost $thread/quotepostlink
-		ln template_quotepost $thread/quotepostfile
-		ln template_quotepost $thread/quotepostsplr
 
 		ln template_gophermap $thread/gophermap
 	else

@@ -11,22 +11,17 @@ source ../params.sh
 
 id=$(basename $(pwd))
 
-if [[ "$CHAN_POST" ]]
+stamp=$(date +%s)
+
+if [[ -e ../posts ]]
 then
-	post=$CHAN_POST
+	no=$(cat ../posts)
 else
-	stamp=$(date +%s)
-
-	if [[ -e ../posts ]]
-	then
-		no=$(cat ../posts)
-	else
-		no=0
-	fi
-	no=$(($no + 1))
-
-	post="$stamp"_"$no"
+	no=0
 fi
+no=$(($no + 1))
+
+post="$stamp"_"$no"
 
 url=$(echo "$@" | cut -c1-$MAX_POSTLEN)
 
@@ -49,6 +44,55 @@ else
 	display=$(echo "$url" | cut -c1-69)
 fi
 
+# quotes
+targetno=$(echo "$display" | sed -r 's/>>([0-9]+) ?.*/\1/')
+if  [[ "$display" == ">>"* && "$targetno" -gt 0 ]]
+then
+	target=$(ls ../[0-9]*_*/[0-9]*_$targetno 2>/dev/null | head -n 1)
+	target="${target#../}"
+
+	if [[ ! "$target" ]]
+	then
+		printf "3Post #$targetno does not exist!	fake	(NULL)	0\r\n"
+		printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+		exit 1
+	fi
+
+	thread="${target%/*}"
+
+	if [[ "$thread" == "$id" ]]
+	then
+		echo "#$targetno said:" >> $post
+	else
+		echo "1$targetno said:	$CHAN_ROOT/$thread	$SERVER_HOST	$SERVER_PORT" >> $post
+	fi
+
+	saveifs="$IFS"
+	IFS=''
+	while read line
+	do
+		if echo "$line" | grep -q -v "	"
+		then
+			while read fmtline
+			do
+				echo "  >$fmtline" >> $post
+			done < <(echo "$line" | fmt -69 -s)
+		else
+			kind=$(echo "$line" | head -c 1)
+			rest=$(echo "$line" | tail -c +2)
+			echo "$kind  >$rest" >> $post
+		fi
+	done < ../$target
+	IFS="$saveifs"
+
+	display=$(echo "$display" | sed -r 's/>>[0-9] ?(.*)/\1/')
+
+	if [[ ! "$display" ]]
+	then
+		display="$proto://$uri"
+	fi
+fi
+
 case $proto in
 	"")		printf "3Invalid URL: $url	fake	(NULL)	0\r\n"
 			printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
@@ -64,11 +108,6 @@ then
 	printf "i$url	fake	(NULL)	0\r\n"
 else
 	echo "$comment" >> $post
-
-	if [[ "$CHAN_POST" ]]
-	then
-		exit
-	fi
 
 	if [ -e $post ]
 	then
