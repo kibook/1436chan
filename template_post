@@ -58,11 +58,7 @@ then
 		exit 1
 	fi
 
-	printf "iTARGET: $target	fake	(NULL)	0\r\n"
-
 	thread="${target%/*}"
-
-	printf "iTHREAD: $thread	fake	(NULL)	0\r\n"
 
 	if [[ "$thread" == "$id" ]]
 	then
