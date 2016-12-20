@@ -85,7 +85,7 @@ then
 	done < ../$target
 	IFS="$saveifs"
 
-	display=$(echo "$display" | sed -r 's/>>[0-9] ?(.*)/\1/')
+	display=$(echo "$display" | sed -r 's/>>[0-9]+ ?(.*)/\1/')
 
 	if [[ ! "$display" ]]
 	then
