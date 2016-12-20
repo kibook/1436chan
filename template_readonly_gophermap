@@ -24,7 +24,7 @@ fi
 
 printf "i	fake	(NULL)	0\r\n"
 
-printf "i$(date -d @$threadstamp +"$DATE_FORMAT")"
+printf "i##$threadno $(date -d @$threadstamp +"$DATE_FORMAT")"
 
 if [[ -e archive ]]
 then
@@ -36,7 +36,7 @@ printf "	fake	(NULL)	0\r\n"
 ../gophermaputil <<EOF
 
 _____________________________________________________________________
-[##$threadno] $(cat gophertag)
+$(cat gophertag)
 _____________________________________________________________________
 
 EOF
