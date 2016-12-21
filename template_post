@@ -76,7 +76,7 @@ then
 			while read fmtline
 			do
 				echo "  >$fmtline" >> $post
-			done < <(echo "$line" | fmt -68 -s)
+			done < <(echo "$line" | fmt -69 -s)
 		else
 			kind=$(echo "$line" | head -c 1)
 			rest=$(echo "$line" | tail -c +2)
