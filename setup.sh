@@ -154,3 +154,4 @@ done
 
 # additional permissions
 chmod -f g+w [0-9]*/postcache
+chmod -f g+w sticky_[0-9]*/postcache
