@@ -95,6 +95,7 @@ then
 	printf "iPost successful!	fake	(NULL)	0\r\n"
 
 	echo $no > ../posts
+	../updatepostcache $post >> postcache
 else
 	printf "3Could not post.	fake	(NULL)	0\r\n"
 fi

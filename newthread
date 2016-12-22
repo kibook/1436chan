@@ -1,5 +1,7 @@
 #!/bin/bash
 
+umask 002
+
 cd "${0%/*}"
 
 source ./params.sh
@@ -70,6 +72,8 @@ else
 		ln template_postfile $post/postfile
 		ln template_postsplr $post/postsplr
 		ln template_postfileb64 $post/postfileb64
+
+		touch $post/postcache
 
 		printf "iThread created successfully!	fake	(NULL)	0\r\n"
 		printf "1View thread	$CHAN_ROOT/$post	$SERVER_HOST	$SERVER_PORT\r\n"
