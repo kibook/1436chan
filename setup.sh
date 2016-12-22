@@ -74,6 +74,23 @@ echo "MAX_IMAGE=$MAX_IMAGE" >> params.sh
 chmod -f g+w .
 chmod -f g+s .
 
+# setup state files
+if [ ! -e threads ]
+then
+	echo 0 > threads
+fi
+if [ ! -e posts ]
+then
+	echo 0 > posts
+fi
+chmod -f g+w threads posts
+
+chmod -f g+w template_*
+chmod -f g+s [0-9]*
+chmod -f g+w [0-9]*
+chmod -f g+s sticky_[0-9]*
+chmod -f g+w sticky_[0-9]*
+
 # fix links
 for thread in $(ls -dtr [0-9]* 2>/dev/null)
 do
@@ -99,6 +116,8 @@ do
 	fi
 
 	cd $thread
+
+	rm postcache
 
 	../updatepostcache > postcache
 
@@ -132,6 +151,8 @@ do
 
 	cd $thread
 
+	rm postcache
+
 	../updatepostcache > postcache
 
 	cd ..
@@ -139,20 +160,5 @@ do
 	touch $thread
 done
 
-# setup state files
-if [ ! -e threads ]
-then
-	echo 0 > threads
-fi
-if [ ! -e posts ]
-then
-	echo 0 > posts
-fi
-chmod -f g+w threads posts
-
-chmod -f g+w [0-9]*/postcache
-
 # additional permissions
-chmod -f g+w template_*
-chmod -f g+w [0-9]*
-chmod -f g+w sticky_[0-9]*
+chmod -f g+w [0-9]*/postcache
