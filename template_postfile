@@ -56,6 +56,115 @@ else
 	dis=$(echo "$url" | cut -c1-69)
 fi
 
+if [[ ! "$proto" ]]
+then
+	printf "3Invalid URL: $url	fake	(NULL)	0\r\n"
+	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+	exit 1
+fi
+
+res="${uri##*/}"
+res="${res%%\?*}"
+ext="${res##*.}"
+
+if [[ "$ext" == "$res" ]]
+then
+	ext=""
+fi
+
+size=$(curl -L -sI "$proto://$uri" | grep "Content-Length" | awk '{print $2}' | tr -d '\r')
+
+if [ ! "$size" ]
+then
+	size=0
+fi
+
+if [ $size -gt $MAX_UPLOAD ]
+then
+	printf "3File too large ($size/$MAX_UPLOAD bytes)	fake	(NULL)	0\r\n"
+	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+	exit 1
+fi
+
+cd ..
+
+if [[ ! "$ext" ]]
+then
+	fname="file_$post"
+else
+	fname="file_$post.$ext"
+fi
+
+curl -L "$proto://$uri" > "$fname" -m 3 --limit-rate $MAX_UPLOAD
+
+size=$(stat --printf "%s" "$fname")
+
+if [ ! "$size" ]
+then
+	size=0
+fi
+
+if [[ $size -gt $MAX_UPLOAD || $? -ne 0 ]]
+then
+	printf "3Failed to fetch file (too large or timed out).	fake	(NULL)	0\r\n"
+	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+	rm -f "$fname"
+	exit 1
+fi
+
+mime=$(file -i -b "$fname")
+mime="${mime%;*}"
+
+if [[ "$MAX_IMAGE" && "$mime" == "image/"* ]]
+then
+	maxw=$(echo $MAX_IMAGE | cut -f 1 -d 'x')
+	maxh=$(echo $MAX_IMAGE | cut -f 2 -d 'x')
+	dims=$(identify "$fname" | head -n 1 | cut -f 3 -d ' ')
+	imgw=$(echo $dims | cut -f 1 -d 'x')
+	imgh=$(echo $dims | cut -f 2 -d 'x')
+
+	if [[ $imgw -gt $maxw || $imgh -gt $maxh ]]
+	then
+		printf "3Image too large ($imgw x $imgh, max $maxw x $maxh)	fake	(NULL)	0\r\n"
+		printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+		rm -f "$fname"
+		exit 1
+	fi
+fi
+
+case "$mime" in
+	"image/png")	type='p';;
+	"image/jpeg")	type='I';;
+	"image/gif")	type='g';;
+	"audio/wav")	type='s';;
+	"text/html")	type='h';;
+	"text/"*)	type='0';;
+	"video/"*)	type=';';;
+	*)		type='9';;
+esac
+
+if [[ ! "$ext" ]]
+then
+	case "$mime" in
+		"video/webm")	ext="webm";;
+		"image/png")	ext="png";;
+		"image/jpeg")	ext="jpg";;
+		"text/html")	ext="html";;
+		"text/x-c")	ext="c";;
+		*)		ext=""
+	esac
+	
+	if [[ "$ext" != "" ]]
+	then
+		mv "$fname" "$fname.$ext"
+		fname="$fname.$ext"
+	fi
+fi
+
+mv "$fname" $id/
+
+cd $id
+
 # quotes
 targetno=$(echo "$dis" | sed -r 's/>>([0-9]+) ?.*/\1/')
 if  [[ "$dis" == ">>"* && "$targetno" -gt 0 ]]
@@ -105,120 +214,15 @@ then
 	fi
 fi
 
-if [[ ! "$proto" ]]
+printf "$type$dis	$CHAN_ROOT/$id/$fname	$SERVER_HOST	$SERVER_PORT\r\n" >> $post
+
+if [ -e $post ]
 then
-	printf "3Invalid URL: $url	fake	(NULL)	0\r\n"
-	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
-	exit 1
-fi
+	printf "iPost successful!	fake	(NULL)	0\r\n"
 
-res="${uri##*/}"
-res="${res%%\?*}"
-ext="${res##*.}"
-
-if [[ "$ext" == "$res" ]]
-then
-	ext=""
-fi
-
-size=$(curl -L -sI "$proto://$uri" | grep "Content-Length" | awk '{print $2}' | tr -d '\r')
-
-if [ ! "$size" ]
-then
-	size=0
-fi
-
-if [ $size -gt $MAX_UPLOAD ]
-then
-	printf "3File too large ($size/$MAX_UPLOAD bytes)	fake	(NULL)	0\r\n"
+	echo $no > ../posts
 else
-	cd ..
-
-	if [[ ! "$ext" ]]
-	then
-		fname="file_$post"
-	else
-		fname="file_$post.$ext"
-	fi
-
-	curl -L "$proto://$uri" > "$fname" -m 3 --limit-rate $MAX_UPLOAD
-
-	size=$(stat --printf "%s" "$fname")
-
-	if [ ! "$size" ]
-	then
-		size=0
-	fi
-
-	if [[ $size -gt $MAX_UPLOAD || $? -ne 0 ]]
-	then
-		printf "3Failed to fetch file (too large or timed out).	fake	(NULL)	0\r\n"
-		rm -f "$fname"
-	else
-		mime=$(file -i -b "$fname")
-		mime="${mime%;*}"
-
-		if [[ "$MAX_IMAGE" && "$mime" == "image/"* ]]
-		then
-			maxw=$(echo $MAX_IMAGE | cut -f 1 -d 'x')
-			maxh=$(echo $MAX_IMAGE | cut -f 2 -d 'x')
-			dims=$(identify "$fname" | head -n 1 | cut -f 3 -d ' ')
-			imgw=$(echo $dims | cut -f 1 -d 'x')
-			imgh=$(echo $dims | cut -f 2 -d 'x')
-
-			if [[ $imgw -gt $maxw || $imgh -gt $maxh ]]
-			then
-				printf "3Image too large ($imgw x $imgh, max $maxw x $maxh)	fake	(NULL)	0\r\n"
-				printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
-				rm -f "$fname"
-				exit 1
-			fi
-		fi
-
-		case "$mime" in
-			"image/png")	type='p';;
-			"image/jpeg")	type='I';;
-			"image/gif")	type='g';;
-			"audio/wav")	type='s';;
-			"text/html")	type='h';;
-			"text/"*)	type='0';;
-			"video/"*)	type=';';;
-			*)		type='9';;
-		esac
-
-		if [[ ! "$ext" ]]
-		then
-			case "$mime" in
-				"video/webm")	ext="webm";;
-				"image/png")	ext="png";;
-				"image/jpeg")	ext="jpg";;
-				"text/html")	ext="html";;
-				"text/x-c")	ext="c";;
-				*)		ext=""
-			esac
-			
-			if [[ "$ext" != "" ]]
-			then
-				mv "$fname" "$fname.$ext"
-				fname="$fname.$ext"
-			fi
-		fi
-
-		mv "$fname" $id/
-
-		cd $id
-
-		printf "$type$dis	$CHAN_ROOT/$id/$fname	$SERVER_HOST	$SERVER_PORT\r\n" >> $post
-
-		if [ -e $post ]
-		then
-			printf "iPost successful!	fake	(NULL)	0\r\n"
-
-			echo $no > ../posts
-		else
-			printf "3Could not post.	fake	(NULL)	0\r\n"
-		fi
-	fi
+	printf "3Could not post.	fake	(NULL)	0\r\n"
 fi
 
 printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"

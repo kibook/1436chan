@@ -18,7 +18,7 @@ if [ ! $MAX_UPLOAD -gt 0 ]
 then
 	printf "3Uploads are disabled	fake	(NULL)	0\r\n"
 	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
-	exit
+	exit 1
 fi
 
 id=$(basename $(pwd))
@@ -33,7 +33,7 @@ else
 fi
 no=$(($no + 1))
 
-post=$(date +%s)
+post="$stamp"_"$no"
 
 data="$1"
 disp="${@:2}"
@@ -55,76 +55,131 @@ fi
 if [ $size -lt 1 ]
 then
 	printf "3Unable to retrieve file size	fake	(NULL)	0\r\n"
-elif [ $size -gt $MAX_UPLOAD ]
+	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+	exit 1
+fi
+
+if [ $size -gt $MAX_UPLOAD ]
 then
 	printf "3File too large (max $MAX_UPLOAD bytes)	fake	(NULL)	0\r\n"
-else
-	cd ..
+	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+	exit 1
+fi
 
-	fname="file_$post"
+cd ..
 
-	echo "$data" | base64 -d > "$fname"
+fname="file_$post"
 
-	mime=$(file -i -b "$fname")
-	mime="${mime%;*}"
+echo "$data" | base64 -d > "$fname"
 
-	if [[ "$MAX_IMAGE" && "$mime" == "image/"* ]]
+mime=$(file -i -b "$fname")
+mime="${mime%;*}"
+
+if [[ "$MAX_IMAGE" && "$mime" == "image/"* ]]
+then
+	maxw=$(echo $MAX_IMAGE | cut -f 1 -d 'x')
+	maxh=$(echo $MAX_IMAGE | cut -f 2 -d 'x')
+	dims=$(identify "$fname" | head -n 1 | cut -f 3 -d ' ')
+	imgw=$(echo $dims | cut -f 1 -d 'x')
+	imgh=$(echo $dims | cut -f 2 -d 'x')
+
+	if [[ $imgw -gt $maxw || $imgh -gt $maxh ]]
 	then
-		maxw=$(echo $MAX_IMAGE | cut -f 1 -d 'x')
-		maxh=$(echo $MAX_IMAGE | cut -f 2 -d 'x')
-		dims=$(identify "$fname" | head -n 1 | cut -f 3 -d ' ')
-		imgw=$(echo $dims | cut -f 1 -d 'x')
-		imgh=$(echo $dims | cut -f 2 -d 'x')
+		printf "3Image too large ($imgw x $imgh, max $maxw x $maxh)	fake	(NULL)	0\r\n"
+		printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+		rm -f "$fname"
+		exit 1
+	fi
+fi
 
-		if [[ $imgw -gt $maxw || $imgh -gt $maxh ]]
-		then
-			printf "3Image too large ($imgw x $imgh, max $maxw x $maxh)	fake	(NULL)	0\r\n"
-			printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
-			rm -f "$fname"
-			exit
-		fi
+case "$mime" in
+	"image/png")	type='p';;
+	"image/jpeg")	type='I';;
+	"image/gif")	type='g';;
+	"audio/wav")	type='s';;
+	"text/html")	type='h';;
+	"text/"*)	type='0';;
+	"video/"*)	type=';';;
+	*)		type='9';;
+esac
+
+case "$mime" in
+	"video/webm")	ext="webm";;
+	"image/png")	ext="png";;
+	"image/jpeg")	ext="jpg";;
+	"text/html")	ext="html";;
+	"text/x-c")	ext="c";;
+	*)		ext="";;
+esac
+
+if [[ "$ext" != "" ]]
+then
+	mv "$fname" "$fname.$ext"
+	fname="$fname.$ext"
+fi
+
+mv "$fname" $id/
+
+cd $id
+
+# quotes
+targetno=$(echo "$disp" | sed -r 's/>>([0-9]+) ?.*/\1/')
+if  [[ "$disp" == ">>"* && "$targetno" -gt 0 ]]
+then
+	target=$(ls ../[0-9]*_*/[0-9]*_$targetno 2>/dev/null | head -n 1)
+	target="${target#../}"
+
+	if [[ ! "$target" ]]
+	then
+		printf "3Post #$targetno does not exist!	fake	(NULL)	0\r\n"
+		printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+		exit 1
 	fi
 
-	case "$mime" in
-		"image/png")	type='p';;
-		"image/jpeg")	type='I';;
-		"image/gif")	type='g';;
-		"audio/wav")	type='s';;
-		"text/html")	type='h';;
-		"text/"*)	type='0';;
-		"video/"*)	type=';';;
-		*)		type='9';;
-	esac
+	thread="${target%/*}"
 
-	case "$mime" in
-		"video/webm")	ext="webm";;
-		"image/png")	ext="png";;
-		"image/jpeg")	ext="jpg";;
-		"text/html")	ext="html";;
-		"text/x-c")	ext="c";;
-		*)		ext="";;
-	esac
-
-	if [[ "$ext" != "" ]]
+	if [[ "$thread" == "$id" ]]
 	then
-		mv "$fname" "$fname.$ext"
-		fname="$fname.$ext"
-	fi
-
-	mv "$fname" $id/
-
-	cd $id
-
-	printf "$type$disp	$CHAN_ROOT/$id/$fname	$SERVER_HOST	$SERVER_PORT\r\n" > $post
-
-	if [ -e $post ]
-	then
-		printf "iPost successful!	fake	(NULL)	0\r\n"
-
-		echo $no > ../posts
+		echo "#$targetno said:" >> $post
 	else
-		printf "3Could not post.	fake	(NULL)	0\r\n"
+		echo "1$targetno said:	$CHAN_ROOT/$thread	$SERVER_HOST	$SERVER_PORT" >> $post
 	fi
+
+	saveifs="$IFS"
+	IFS=''
+	while read line
+	do
+		if echo "$line" | grep -q -v "	"
+		then
+			while read fmtline
+			do
+				echo "  >$fmtline" >> $post
+			done < <(echo "$line" | fmt -66 -s | fold -w 66)
+		else
+			kind=$(echo "$line" | head -c 1)
+			rest=$(echo "$line" | tail -c +2)
+			echo "$kind  >$rest" >> $post
+		fi
+	done < ../$target
+	IFS="$saveifs"
+
+	disp=$(echo "$disp" | sed -r 's/>>[0-9]+ ?(.*)/\1/')
+
+	if [[ ! "$disp" ]]
+	then
+		disp="untitled"
+	fi
+fi
+
+printf "$type$disp	$CHAN_ROOT/$id/$fname	$SERVER_HOST	$SERVER_PORT\r\n" >> $post
+
+if [ -e $post ]
+then
+	printf "iPost successful!	fake	(NULL)	0\r\n"
+
+	echo $no > ../posts
+else
+	printf "3Could not post.	fake	(NULL)	0\r\n"
 fi
 
 printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
