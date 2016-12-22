@@ -77,64 +77,52 @@ chmod -f g+s .
 # fix links
 for thread in $(ls -dtr [0-9]* 2>/dev/null)
 do
-	cd $thread
+	rm -f $thread/gophermap
 
-	rm -f gophermap
-
-	if [ -e post ]
+	if [ -e $thread/post ]
 	then
-		rm -f post
-		rm -f postlink
-		rm -f postfile
-		rm -f postsplr
-		rm -f postfileb64
+		rm -f $thread/post
+		rm -f $thread/postlink
+		rm -f $thread/postfile
+		rm -f $thread/postsplr
+		rm -f $thread/postfileb64
 
-		ln template_post post
-		ln template_postlink postlink
-		ln template_postfile postfile
-		ln template_postsplr postsplr
-		ln template_postfileb64 postfileb64
+		ln template_post $thread/post
+		ln template_postlink $thread/postlink
+		ln template_postfile $thread/postfile
+		ln template_postsplr $thread/postsplr
+		ln template_postfileb64 $thread/postfileb64
 
-		ln template_gophermap gophermap
+		ln template_gophermap $thread/gophermap
 	else
-		ln template_readonly_gophermap gophermap
+		ln template_readonly_gophermap $thread/gophermap
 	fi
-
-	../updatepostcache > postcache
-
-	cd ..
 
 	touch $thread
 done
 
 for thread in $(ls -dtr sticky_* 2>/dev/null)
 do
-	cd $thread
+	rm -f $thread/gophermap
 
-	rm -f gophermap
-
-	if [ -e post ]
+	if [ -e $thread/post ]
 	then
-		rm -f post
-		rm -f postlink
-		rm -f postfile
-		rm -f postsplr
-		rm -f postfileb64
+		rm -f $thread/post
+		rm -f $thread/postlink
+		rm -f $thread/postfile
+		rm -f $thread/postsplr
+		rm -f $thread/postfileb64
 
-		ln template_post post
-		ln template_postlink postlink
-		ln template_postfile postfile
-		ln template_postsplr postsplr
-		ln template_postfileb64 postfileb64
+		ln template_post $thread/post
+		ln template_postlink $thread/postlink
+		ln template_postfile $thread/postfile
+		ln template_postsplr $thread/postsplr
+		ln template_postfileb64 $thread/postfileb64
 
-		ln template_gophermap gophermap
+		ln template_gophermap $thread/gophermap
 	else
-		ln template_readonly_gophermap gophermap
+		ln template_readonly_gophermap $thread/gophermap
 	fi
-
-	../updatepostcache > postcache
-
-	cd ..
 
 	touch $thread
 done
@@ -149,8 +137,6 @@ then
 	echo 0 > posts
 fi
 chmod -f g+w threads posts
-
-chmod -f g+w [0-9]*/postcache
 
 # additional permissions
 chmod -f g+w template_*
