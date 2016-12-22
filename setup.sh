@@ -98,6 +98,12 @@ do
 		ln template_readonly_gophermap $thread/gophermap
 	fi
 
+	cd $thread
+
+	../updatepostcache > postcache
+
+	cd ..
+
 	touch $thread
 done
 
@@ -124,6 +130,12 @@ do
 		ln template_readonly_gophermap $thread/gophermap
 	fi
 
+	cd $thread
+
+	../updatepostcache > postcache
+
+	cd ..
+
 	touch $thread
 done
 
@@ -137,6 +149,8 @@ then
 	echo 0 > posts
 fi
 chmod -f g+w threads posts
+
+chmod -f g+w [0-9]*/postcache
 
 # additional permissions
 chmod -f g+w template_*
