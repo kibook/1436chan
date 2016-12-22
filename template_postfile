@@ -190,11 +190,11 @@ then
 
 	saveifs="$IFS"
 	IFS=''
-	while read line
+	while read -r line
 	do
 		if echo "$line" | grep -q -v "	"
 		then
-			while read fmtline
+			while read -r fmtline
 			do
 				echo "  >$fmtline" >> $post
 			done < <(echo "$line" | fmt -66 -s | fold -w 66)

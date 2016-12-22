@@ -53,13 +53,13 @@ do
 
 	printf "i$header	fake	(NULL)	0\r\n"
 
-	while read line
+	while read -r line
 	do
 		if echo "$line" | grep -q "	"
 		then
 			printf "$line\r\n"
 		else
-			while read fmtline
+			while read -r fmtline
 			do
 				printf "i%s	fake	(NULL)	0\r\n" "$fmtline"
 			done < <(echo "$line" | fmt -69 | fold -w 69)
