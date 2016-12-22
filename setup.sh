@@ -115,13 +115,9 @@ do
 		ln template_readonly_gophermap $thread/gophermap
 	fi
 
-	cd $thread
+	rm -f $thread/postcache
 
-	rm postcache
-
-	../updatepostcache > postcache
-
-	cd ..
+	./updatepostcache $thread > $thread/postcache
 
 	touch $thread
 done
@@ -149,13 +145,9 @@ do
 		ln template_readonly_gophermap $thread/gophermap
 	fi
 
-	cd $thread
+	rm -f $thread/postcache
 
-	rm postcache
-
-	../updatepostcache > postcache
-
-	cd ..
+	./updatepostcache $thread > $thread/postcache
 
 	touch $thread
 done

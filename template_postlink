@@ -114,7 +114,7 @@ else
 		printf "iPost successfuly!	fake	(NULL)	0\r\n"
 
 		echo $no > ../posts
-		../updatepostcache $post >> postcache
+		../updatepostcache $id $post >> postcache
 	else
 		printf "3Could not post.	fake	(NULL)	0\r\n"
 	fi
