@@ -85,13 +85,14 @@ then
 fi
 chmod -f g+w threads posts
 
+# thread permissions
 chmod -f g+w template_*
 chmod -f g+s [0-9]*
 chmod -f g+w [0-9]*
 chmod -f g+s sticky_[0-9]*
 chmod -f g+w sticky_[0-9]*
 
-# fix links
+# fix thread links
 for thread in $(ls -dtr [0-9]* 2>/dev/null)
 do
 	rm -f $thread/gophermap
@@ -152,6 +153,6 @@ do
 	touch $thread
 done
 
-# additional permissions
+# postcache permissions
 chmod -f g+w [0-9]*/postcache
 chmod -f g+w sticky_[0-9]*/postcache
