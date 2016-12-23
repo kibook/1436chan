@@ -1,8 +1,17 @@
 thread="$1"
 
 stamp=$(date +%s)
-no=$(($(ls [0-9]*/[0-9]* | wc -l) + 1))
+
+if [ -e posts ]
+then
+	no=$(cat posts)
+else
+	no=0
+fi
+no=$(($no + 1))
+
 post="$stamp"_"$no"
 
 touch $thread/$post
 vi $thread/$post
+./updatepostcache $thread $post >> $thread/postcache
