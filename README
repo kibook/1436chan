@@ -85,25 +85,32 @@ _____________________________________________________________________
 	to disable.
 
 
+ADMINISTRATOR UTILITY
+_____________________________________________________________________
+
+    The Administrator utility provides a simple menu for performing
+    common tasks. To use it, run:
+    
+        sh admin.sh
+
+    and follow the prompts. The individual scripts this menu calls
+    are described below as well.
+
+
 DELETING A THREAD OR POST
 _____________________________________________________________________
 
     To delete a thread (from the root folder):
 
-        rm -r <thread>
+        sh deletethread.sh <thread>
 
-    where <thread> is the id of the thread. For normal threads this
-    is the Unix timestamp when the thread was created plus the
-    number of the thread separated by an underscore. For stickies,
-    this includes the prefix "sticky_".
+    where <thread> is the thread number (##) of the thread.
 
     To delete a post (from the root folder):
 
-       rm <thread>/<post>
+       sh deletepost.sh <post>
 
-  where <post> is the id number of the post in <thread>. That is
-  the Unix timestamp when the post was made plus the number of the
-  post separated by and underscore.
+    where <post> is the post number (#) of the post.
 
 
 MESSAGE OF THE DAY
@@ -140,14 +147,16 @@ _____________________________________________________________________
       <title>. Closed stickies can only be replied to by an
       administrator.
 
-  sh makesticky.sh <thread>
+  sh makesticky.sh <directory>
       Turns an existing thread in to an open sticky.
 
-  sh makerosticky.sh <thread>
+  sh makerosticky.sh <directory>
       Turns an existing thread in to a closed sticky.
 
   rm -r sticky_<...>
-      Deletes the sticky with id <...>.
+      Deletes the sticky with id <...>. Alternatively use
+      sh deletethread.sh <##> where ## is the thread number
+      of the sticky.
 
   sh post.sh sticky_<...>
       Add a post to the sticky with id <...>.
