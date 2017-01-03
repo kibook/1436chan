@@ -2,9 +2,9 @@
 
 stamp=$(date +%s)
 
-if [ -e posts ]
+if [ -e threads ]
 then
-	no=$(cat posts)
+	no=$(cat threads)
 else
 	no=0
 fi
