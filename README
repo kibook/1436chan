@@ -38,6 +38,11 @@ _____________________________________________________________________
         The maximum characters allowed in a thread
         title. Additional characters are truncated.
 
+    MAX_POSTS
+        The maximum number of posts allowed in a thread. When
+	MAX_POSTS posts already exist, users will be unable to
+	add more posts to a thread.
+
     MAX_POSTLEN
         The maximum characters allowed in a post. Additional
         characters are truncated.
