@@ -2,7 +2,7 @@ timestamp=`date +%s`
 
 stamp=$(date +%s)
 
-if [[ -e posts ]]
+if [ -e posts ]
 then
 	no=$(cat posts)
 else
