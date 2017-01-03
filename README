@@ -41,7 +41,8 @@ _____________________________________________________________________
     MAX_POSTS
         The maximum number of posts allowed in a thread. When
 	MAX_POSTS posts already exist, users will be unable to
-	add more posts to a thread.
+	add more posts to a thread. If this is 0, there is no
+	limit to the number of posts allowed.
 
     MAX_POSTLEN
         The maximum characters allowed in a post. Additional
