@@ -61,7 +61,7 @@ do
 				no="${post#*_}"
 				posted=$(date -d @$stamp +"$DATE_FORMAT")
 
-				header=$(printf "__[%s #%d]%s" "$posted" $no "$pad" | cut -c1-69)
+				header=$(printf "__[%s #%d]%s" "$posted" $no "$pad" | cut -c1-70)
 				printf "i$header	fake	(NULL)	0\r\n"
 
 				saveifs="$IFS"
@@ -75,7 +75,7 @@ do
 						while read -r fmtline
 						do
 							printf "i%s	fake	(NULL)	0\r\n" "$fmtline"
-						done < <(echo "$line" | fmt -69 | fold -w 69)
+						done < <(echo "$line" | fmt -70 | fold -w 70)
 					fi
 				done < $post
 				IFS="$saveifs"
