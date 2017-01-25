@@ -30,7 +30,7 @@ do
 	do
 		if echo "$line" | grep -q "	"
 		then
-			printf "$line\r\n"
+			printf "%s\r\n" "$line"
 		else
 			while read -r fmtline
 			do
