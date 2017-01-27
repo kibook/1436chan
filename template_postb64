@@ -1,0 +1,102 @@
+#!/bin/bash
+
+cd "${0%/*}"
+
+if [ ! -e "../params.sh" ]
+then
+	exit
+fi
+
+source ../params.sh
+
+if [[ "$MAX_POSTS" -gt 0 && $(ls [0-9]* 2>/dev/null | wc -l) -ge $MAX_POSTS ]]
+then
+	printf "3Post failed.	fake	(NULL)	0\r\n"
+	printf "iPost limit reached ($MAX_POSTS)	fake	(NULL)	0\r\n"
+	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+	exit 1
+fi
+
+id=$(basename $(pwd))
+
+comment="$@"
+len=${#comment}
+
+stamp=$(date +%s)
+
+if [[ -e ../posts ]]
+then
+	no=$(cat ../posts)
+else
+	no=0
+fi
+no=$(($no + 1))
+
+post="$stamp"_"$no"
+
+if [[ "$comment" = "" ]]
+then
+	printf "3Post failed.	fake	(NULL)	0\r\n"
+	printf "i	fake	(NULL)	0\r\n"
+	printf "iYou must post a comment.	fake	(NULL)	0\r\n"
+	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+	exit 1
+fi
+
+# quotes
+targetno=$(echo "$comment" | sed -r 's/>>([0-9]+) ?.*/\1/')
+if [[ "$comment" == ">>"* && "$targetno" -gt 0 ]]
+then
+	target=$(ls ../[0-9]*/[0-9]*_$targetno 2>/dev/null | head -n 1)
+	target="${target#../}"
+
+	if [[ ! "$target" ]]
+	then
+		printf "3Post #$targetno does not exist.	fake	(NULL)	0\r\n"
+		printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+		exit 1
+	fi
+
+	thread="${target%/*}"
+
+	if [[ "$thread" == "$id" ]]
+	then
+		echo "#$targetno said:" >> $post
+	else
+		echo "1#$targetno said:	$CHAN_ROOT/$thread	$SERVER_HOST	$SERVER_PORT" >> $post
+	fi
+
+	saveifs="$IFS"
+	IFS=''
+	while read -r line
+	do
+		if echo "$line" | grep -v -q "	"
+		then
+			while read -r fmtline
+			do
+				echo "  >$fmtline" >> $post
+			done < <(echo "$line" | fmt -66 -s | fold -w 66)
+		else
+			kind=$(echo "$line" | head -c 1)
+			rest=$(echo "$line" | tail -c +2)
+			echo "$kind  >$rest" >> $post
+		fi
+	done < ../$target
+	IFS="$saveifs"
+	
+	comment=$(echo "$comment" | sed -r 's/>>[0-9]+ ?(.*)/\1/' | sed 's/	/    /g')
+fi
+
+echo "$comment" | base64 -d >> $post
+
+if [ -e $post ]
+then
+	printf "iPost successful!	fake	(NULL)	0\r\n"
+
+	echo $no > ../posts
+	../updatepostcache $id $post >> postcache
+else
+	printf "3Could not post.	fake	(NULL)	0\r\n"
+fi
+
+printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
