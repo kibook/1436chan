@@ -19,7 +19,7 @@ fi
 
 id=$(basename $(pwd))
 
-comment="$@"
+comment=$(echo "$@" | base64 -d)
 len=${#comment}
 
 stamp=$(date +%s)
@@ -87,7 +87,7 @@ then
 	comment=$(echo "$comment" | sed -r 's/>>[0-9]+ ?(.*)/\1/' | sed 's/	/    /g')
 fi
 
-echo "$comment" | base64 -d >> $post
+echo "$comment" >> $post
 
 if [ -e $post ]
 then
