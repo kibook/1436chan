@@ -43,6 +43,15 @@ then
 	exit 1
 fi
 
+if [[ $len -gt $MAX_POSTLEN ]]
+then
+	printf "3Post failed.	fake	(NULL)	0\r\n"
+	printf "i	fake	(NULL)	0\r\n"
+	printf "iComment too long ($len/$MAX_POSTLEN)	fake	(NULL)	0\r\n"
+	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+	exit 1
+fi
+
 # quotes
 targetno=$(echo "$comment" | sed -r 's/>>([0-9]+) ?.*/\1/')
 if [[ "$comment" == ">>"* && "$targetno" -gt 0 ]]
