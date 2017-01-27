@@ -109,12 +109,14 @@ do
 		rm -f $thread/postfile
 		rm -f $thread/postsplr
 		rm -f $thread/postfileb64
+		rm -f $thread/postb64
 
 		ln template_post $thread/post
 		ln template_postlink $thread/postlink
 		ln template_postfile $thread/postfile
 		ln template_postsplr $thread/postsplr
 		ln template_postfileb64 $thread/postfileb64
+		ln template_postb64 $thread/postb64
 
 		ln template_gophermap $thread/gophermap
 	else
@@ -139,12 +141,14 @@ do
 		rm -f $thread/postfile
 		rm -f $thread/postsplr
 		rm -f $thread/postfileb64
+		rm -f $thread/postb64
 
 		ln template_post $thread/post
 		ln template_postlink $thread/postlink
 		ln template_postfile $thread/postfile
 		ln template_postsplr $thread/postsplr
 		ln template_postfileb64 $thread/postfileb64
+		ln template_postb64 $thread/postb64
 
 		ln template_gophermap $thread/gophermap
 	else

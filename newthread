@@ -72,6 +72,7 @@ else
 		ln template_postfile $post/postfile
 		ln template_postsplr $post/postsplr
 		ln template_postfileb64 $post/postfileb64
+		ln template_postb64 $post/postb64
 
 		touch $post/postcache
 

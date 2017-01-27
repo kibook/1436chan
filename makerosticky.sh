@@ -8,3 +8,4 @@ rm -f sticky_$1/postlink
 rm -f sticky_$1/postfile
 rm -f sticky_$1/postsplr
 rm -f sticky_$1/postfileb64
+rm -f sticky_$1/postb64
