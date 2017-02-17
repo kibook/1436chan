@@ -19,9 +19,9 @@ printf "1Return	$CHAN_ROOT	$SERVER_HOST	$SERVER_PORT\r\n"
 printf "i	fake	(NULL)	0\r\n"
 
 printf "i##$threadno $(date -d @$threadstamp +"$DATE_FORMAT")	fake	(NULL)	0\r\n"
-printf "i_____________________________________________________________________	fake	(NULL)	0\r\n"
+printf "i______________________________________________________________________	fake	(NULL)	0\r\n"
 printf "i$(cat gophertag)	fake	(NULL)	0\r\n"
-printf "i_____________________________________________________________________	fake	(NULL)	0\r\n"
+printf "i______________________________________________________________________	fake	(NULL)	0\r\n"
 printf "i	fake	(NULL)	0\r\n"
 
 if [[ "$(ls [0-9]* 2>/dev/null | wc -l)" -eq 0 ]]
