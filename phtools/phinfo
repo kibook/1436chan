@@ -1,0 +1,3 @@
+#!/bin/sh
+
+phitem 'i' "$1" 'fake' '(NULL)' '0'

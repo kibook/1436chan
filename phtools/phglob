@@ -1,0 +1,39 @@
+#!/bin/sh
+
+pattern="$1"
+shift
+prefix="$1"
+shift
+
+find * -maxdepth 0 -name "$pattern" ! -name gophermap $@ | sort | while read file
+do
+	display="$file"
+
+	if [ -d "$file" ]
+	then
+		itemtype=1
+
+		if [ -e "$file"/gophertag ]
+		then
+			display="$(cat "$file"/gophertag)"
+		fi
+	else
+		case "$file" in
+			*.[tT][xX][tT])		itemtype=0;;
+			*.[gG][iI][fF])		itemtype=g;;
+			*.[gG][zZ])		itemtype=9;;
+			*.[zZ][iI][pP])		itemtype=5;;
+			*.[jJ][pP]*[gG])	itemtype=I;;
+			*.[pP][nN][gG])		itemtype=p;;
+			*.[pP][dD][fF])		itemtype=d;;
+			*.[cC][sS][sS])		itemtype=c;;
+			*.[xX][mM][lL])		itemtype=x;;
+			*.[hH][tT][mM][lL])	itemtype=h;;
+			*.[hH][qQ][xX])		itemtype=4;;
+			*.?*)			itemtype=9;;
+			*)			itemtype=0;;
+		esac
+	fi
+
+	phitem $itemtype "$display" "$prefix/$file"
+done

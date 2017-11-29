@@ -1,0 +1,7 @@
+#!/bin/sh
+
+IFS=''
+fmt -70 -s | fold -w 70 | while read -r line
+do
+	phinfo "$line"
+done

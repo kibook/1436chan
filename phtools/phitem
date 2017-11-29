@@ -1,0 +1,26 @@
+#!/bin/sh
+
+kind="$1"
+disp="$2"
+path="$3"
+
+if [ ! "$4" ]
+then
+	host="$SERVER_HOST"
+else
+	host="$4"
+fi
+
+if [ ! "$5" ]
+then
+	if [ "$SERVER_PORT" ]
+	then
+		port="$SERVER_PORT"
+	else
+		port=70
+	fi
+else
+	port="$5"
+fi
+
+printf "%s%s\t%s\t%s\t%s\r\n" "$kind" "$disp" "$path" "$host" "$port"

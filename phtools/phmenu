@@ -1,0 +1,48 @@
+#!/bin/sh
+
+IFS=''
+while read -r line
+do
+	if echo "$line" | grep -q "	"
+	then
+		kind=$(echo "$line" | cut -f 1 | cut -c 1)
+		disp=$(echo "$line" | cut -f 1 | cut -c 2-)
+		path=$(echo "$line" | cut -f 2)
+		host=$(echo "$line" | cut -f 3)
+		port=$(echo "$line" | cut -f 4)
+
+		if [ ! "$path" ]
+		then
+			path="$REQUEST/$disp"
+
+			if [ -d "$disp" ] && [ -e "$disp"/gophertag ]
+			then
+				disp="$(cat "$disp/gophertag")"
+			fi
+		fi
+
+		if [ ! "$host" ]
+		then
+			if [ "$SERVER_HOST" ]
+			then
+				host="$SERVER_HOST"
+			else
+				host="localhost"
+			fi
+		fi
+
+		if [ ! "$port" ]
+		then
+			if [ "$SERVER_PORT" ]
+			then
+				port="$SERVER_PORT"
+			else
+				port="70"
+			fi
+		fi
+
+		printf "%s%s\t%s\t%s\t%s\r\n" "$kind" "$disp" "$path" "$host" "$port"
+	else
+		printf "i%s\tfake\t(NULL)\t0\r\n" "$(echo "$line" | tr -d '\r\n')"
+	fi
+done

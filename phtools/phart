@@ -1,0 +1,7 @@
+#!/bin/sh
+
+IFS=''
+while read -r line
+do
+	phinfo "$line"
+done
