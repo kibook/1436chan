@@ -27,8 +27,11 @@ then
 	phline
 fi
 
-phitem 7 'New thread' "$CHAN_ROOT/newthread"
-phline
+if [ "$MAX_THREADS" -gt 0 ]
+then
+	phitem 7 'New thread' "$CHAN_ROOT/newthread"
+	phline
+fi
 
 pad=$(printf %70s | tr ' ' '_')
 
