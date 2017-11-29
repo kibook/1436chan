@@ -63,7 +63,21 @@ do
 				header=$(printf "__[%s #%d]%s" "$posted" $no "$pad" | cut -c1-70)
 				phinfo "$header"
 
-				cat $post | phmenu
+				saveifs="$IFS"
+				IFS=''
+				cat $post | while read -r line
+				do
+					if echo "$line" | grep -q "	"
+					then
+						printf "%s\r\n" "$line"
+					else
+						echo "$line" | fmt -70 | fold -w 70 | while read -r fmtline
+						do
+							phinfo "$fmtline"
+						done
+					fi
+				done
+				IFS="$saveifs"
 
 				phline
 
