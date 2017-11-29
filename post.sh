@@ -1,9 +1,6 @@
-thread=$(ls -d [0-9]*_$1 2>/dev/null)
+#!/bin/sh
 
-if [ ! "$thread" ]
-then
-	thread=$(ls -d sticky_[0-9]*_$1 2>/dev/null)
-fi
+thread=$1
 
 if [ ! "$thread" ]
 then
@@ -21,7 +18,7 @@ else
 fi
 no=$(($no + 1))
 
-post="$stamp"_"$no"
+post="$no"
 
 touch $thread/$post
 vi $thread/$post

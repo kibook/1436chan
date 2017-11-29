@@ -1,9 +1,4 @@
-thread=$(ls [0-9]*_$1 2>/dev/null)
-
-if [ ! "$thread" ]
-then
-	thread=$(ls sticky_[0-9]*_$1 2>/dev/null)
-fi
+thread=$1
 
 if [ ! "$thread" ]
 then

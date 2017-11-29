@@ -1,14 +1,14 @@
-#!/bin/bash
+#!/bin/sh
 
 umask 002
 
-cd "${0%/*}"
+cd $(dirname "$0")
 
-source ./params.sh
+. ./params.sh
 
 comment=$(echo "$@" | cut -c1-$MAX_TITLELEN)
 
-if [[ -e threads ]]
+if [ -e threads ]
 then
 	no=$(cat threads)
 else
@@ -16,21 +16,22 @@ else
 fi
 no=$(($no + 1))
 
-post="$(date +%s)_$no"
+stamp=$(date +%s)
+post=$no
 
-if [[ "$comment" = "" ]]
+if [ "$comment" = "" ]
 then
-	printf "3Thread creation failed.	fake	(NULL)	0\r\n"
-	printf "iYou must post a comment.	fake	(NULL)	0\r\n"
+	pherror 'Thread creation failed.'
+	phinfo 'You must include a title.'
 else
 	nthreads=$(ls -d [0-9]* 2>/dev/null | wc -l)
 	narchive=$(ls -d [0-9]*/archive 2>/dev/null | wc -l)
 
-	if [[ $(($nthreads - $narchive)) -ge $MAX_THREADS ]]
+	if [ $(($nthreads - $narchive)) -ge $MAX_THREADS ]
 	then
 		for thread in $(ls -dt [0-9]* 2>/dev/null)
 		do
-			if [[ -e $thread/archive ]]
+			if [ -e $thread/archive ]
 			then
 				continue
 			else
@@ -38,23 +39,23 @@ else
 			fi
 		done
 
-		if [[ "$ENABLE_ARCHIVE" != "n" ]]
+		if [ "$ENABLE_ARCHIVE" != n ]
 		then
 			sh archive.sh $old
 
-			if [[ ! -e $old/archive ]]
+			if [ ! -e $old/archive ]
 			then
-				printf "3ERROR: Failed to archive thread!	fake	(NULL)	0\r\n"
-				printf "1Return	$CHAN_ROOT	$SERVER_HOST	$SERVER_PORT\r\n"
+				pherror 'ERROR: Failed to archive thread!'
+				phitem 1 Return "$CHAN_ROOT"
 				exit
 			fi
 		else
 			rm -r $old
 
-			if [[ -e $old ]]
+			if [ -e $old ]
 			then
-				printf "3ERROR: Faild to remove thread!	fake	(NULL)	0\r\n"
-				printf "1Return	$CHAN_ROOT	$SERVER_HOST	$SERVER_PORT\r\n"
+				pherror 'ERROR: Failed to remove thread!'
+				phitem 1 Return "$CHAN_ROOT"
 				exit
 			fi
 		fi
@@ -62,7 +63,7 @@ else
 
 	mkdir $post
 
-	if [[ -e $post ]]
+	if [ -e $post ]
 	then
 		echo "$comment" > $post/gophertag
 
@@ -75,13 +76,14 @@ else
 		ln template_postb64 $post/postb64
 
 		touch $post/postcache
+		echo $stamp > $post/stamp
 
-		printf "iThread created successfully!	fake	(NULL)	0\r\n"
-		printf "1View thread	$CHAN_ROOT/$post	$SERVER_HOST	$SERVER_PORT\r\n"
+		phinfo 'Thread created successfully!'
+		phitem 1 'View thread' "$CHAN_ROOT/$post"
 
 		echo $no > threads
 	else
-		printf "3Could not create thread.	fake	(NULL)	0\r\n"
-		printf "1Return	$CHAN_ROOT	$SERVER_HOST	$SERVER_PORT\r\n"
+		pherror 'Could not create thread.'
+		phitem 1 Return "$CHAN_ROOT"
 	fi
 fi

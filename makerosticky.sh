@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 mv $1 sticky_$1
 rm -f $1/gophermap

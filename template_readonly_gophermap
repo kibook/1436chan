@@ -5,8 +5,7 @@ cd "${0%/*}"
 thread=$(basename $(pwd))
 thread="${thread#sticky_*}"
 
-threadstamp="${thread%_*}"
-threadno="${thread#*_}"
+threadstamp=$(cat stamp)
 
 if [ ! -e "../params.sh" ]
 then
@@ -24,7 +23,7 @@ fi
 
 printf "i	fake	(NULL)	0\r\n"
 
-printf "i##$threadno $(date -d @$threadstamp +"$DATE_FORMAT")"
+printf "i##$thread $(date -d @$threadstamp +"$DATE_FORMAT")"
 
 if [[ -e archive ]]
 then
@@ -34,7 +33,7 @@ fi
 
 printf "	fake	(NULL)	0\r\n"
 
-../gophermaputil <<EOF
+phmenu <<EOF
 _____________________________________________________________________
 $(cat gophertag)
 _____________________________________________________________________

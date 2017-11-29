@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Convert a Gopher URI to a Gopher 'link' (for a menu)
 
@@ -15,11 +15,11 @@ host=$(echo "$1" | sed -r "s/$regex/\2/")
 port=$(echo "$1" | sed -r "s/$regex/\3/")
 display="$2"
 
-if [[ ! "$type" ]]; then type=1; fi
-if [[ ! "$selector" ]]; then selector=/; fi
-if [[ ! "$port" ]]; then port=70; fi
+if [ ! "$type" ]; then type=1; fi
+if [ ! "$selector" ]; then selector=/; fi
+if [ ! "$port" ]; then port=70; fi
 
-if [[ ! "$host" || ! "$display" || "$host" == "$protocol" ]]
+if [ ! "$host" ] || [ ! "$display" ] || [ "$host" = "$protocol" ]
 then
 	exit
 fi

@@ -1,3 +1,5 @@
+#!/bin/sh
+
 choice=""
 
 while true
@@ -12,6 +14,7 @@ do
 	echo "5) Create an open sticky"
 	echo "6) Create a closed sticky"
 	echo "7) Post to a thread"
+	echo "8) Wipe"
 	echo "q) Quit"
 
 	echo
@@ -52,6 +55,8 @@ do
 		7) read -p "thread #: " thread
 		   sh post.sh $thread
 		   if [ $? -eq 0 ]; then echo "Post successful!"; fi;;
+
+		8) sh wipe.sh;;
 
 		q) exit;;
 

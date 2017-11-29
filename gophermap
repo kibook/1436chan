@@ -1,93 +1,78 @@
-#!/bin/bash
+#!/bin/sh
 
-cd "${0%/*}"
+arg="$@"
 
-source params.sh
+cd $(dirname "$0")
 
-if [[ "$@" == "catalog" ]]
+. ./params.sh
+
+if [ "$arg" = catalog ]
 then
 	LAST_POSTS=0
 fi
 
-if [[ -e "motd" ]]
+if [ -e motd ]
 then
-	cat motd | ./gophermaputil
-	printf "i	fake	(NULL)	0\r\n"
+	cat motd | phmenu
+	phline
 fi
 
 for sticky in $(ls -td sticky_* 2>/dev/null)
 do
-	printf "1[sticky] $(cat $sticky/gophertag)	$CHAN_ROOT/$sticky	$SERVER_HOST	$SERVER_PORT\r\n"
+	phitem 1 "[sticky] $(cat $sticky/gophertag)" "$CHAN_ROOT/$sticky"
 done
 
-if [[ $(ls -td sticky_* 2>/dev/null | wc -l) -gt 0 ]]
+if [ $(ls -td sticky_* 2>/dev/null | wc -l) -gt 0 ]
 then
-	printf "i	fake	(NULL)	0\r\n"
+	phline
 fi
 
-printf "7New thread	$CHAN_ROOT/newthread	$SERVER_HOST	$SERVER_PORT\r\n"
-printf "i	fake	(NULL)	0\r\n"
+phitem 7 'New thread' "$CHAN_ROOT/newthread"
+phline
 
-pad=$(printf "_%.0s" {1..70})
+pad=$(printf %70s | tr ' ' '_')
 
 for thread in $(ls -td [0-9]* 2>/dev/null)
 do
 	cd $thread
 
-	threadstamp="${thread%_*}"
-	threadno="${thread#*_}"
-
-	if [[ ! -e archive ]]
+	if [ ! -e archive ]
 	then
 		lastposts=$(ls -v [0-9]* 2>/dev/null | tail -n $LAST_POSTS)
 		npost=$(ls [0-9]* 2> /dev/null | wc -l)
 		nlast=$(echo -n "$lastposts" | wc -l)
 
-		if [[ $npost -gt 0 || "$SHOW_EMPTY_THREADS" = "y" ]]
+		if [ $npost -gt 0 ] || [ "$SHOW_EMPTY_THREADS" = y ]
 		then
 			printf "1[thread] %s (%d " "$(cat gophertag)" $npost
 			if [ $npost -eq 1 ]
 			then
-				printf "post"
+				printf post
 			else
-				printf "posts"
+				printf posts
 			fi
 			printf ")\t$CHAN_ROOT/$thread\t$SERVER_HOST\t$SERVER_PORT\r\n"
 
 			i=$((npost-nlast))
 			for post in $lastposts
 			do
-				stamp="${post%_*}"
-				no="${post#*_}"
+				stamp=$(echo "$post" | cut -d _ -f 1)
+				no=$(echo "$post" | cut -d _ -f 2)
 				posted=$(date -d @$stamp +"$DATE_FORMAT")
 
 				header=$(printf "__[%s #%d]%s" "$posted" $no "$pad" | cut -c1-70)
-				printf "i$header	fake	(NULL)	0\r\n"
+				phinfo "$header"
 
-				saveifs="$IFS"
-				IFS=''
-				while read -r line
-				do
-					if echo "$line" | grep -q "	"
-					then
-						printf "%s\r\n" "$line"
-					else
-						while read -r fmtline
-						do
-							printf "i%s	fake	(NULL)	0\r\n" "$fmtline"
-						done < <(echo "$line" | fmt -70 | fold -w 70)
-					fi
-				done < $post
-				IFS="$saveifs"
+				cat $post | phmenu
 
-				printf "i	fake	(NULL)	0\r\n"
+				phline
 
 				i=$((i+1))
 			done
 
-			if [[ $LAST_POSTS -gt 0 && $nlast -gt 0 ]]
+			if [ "$LAST_POSTS" -gt 0 ] && [ "$nlast" -gt 0 ]
 			then
-				printf "i	fake	(NULL)	0\r\n"
+				phline
 			fi
 		fi
 	fi
@@ -95,8 +80,8 @@ do
 	cd ..
 done
 
-if [[ "$ENABLE_ARCHIVE" == "y" ]]
+if [ "$ENABLE_ARCHIVE" = y ]
 then
-	printf "i	fake	(NULL)	0\r\n"
-	printf "1Archive	$CHAN_ROOT/archive	$SERVER_HOST	$SERVER_PORT\r\n"
+	phline
+	phitem 1 Archive "$CHAN_ROOT/archive"
 fi

@@ -1,4 +1,6 @@
-post=$(ls [0-9]*_[0-9]*/[0-9]*_$1 2>/dev/null)
+#!/bin/sh
+
+post=$(ls [0-9]*/[0-9]*_$1 2>/dev/null)
 
 if [ ! "$post" ]
 then

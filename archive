@@ -1,23 +1,22 @@
-#!/bin/bash
+#!/bin/sh
 
-cd "${0%/*}"
+cd $(dirname "$0")
 
-source params.sh
+. ./params.sh
 
-printf "1Return	$CHAN_ROOT	$SERVER_HOST	$SERVER_PORT\r\n"
-printf "i	fake	(NULL)	0\r\n"
-printf "iArchived threads:	fake	(NULL)	0\r\n"
+phitem 1 Return "$CHAN_ROOT"
+phline
+phinfo 'Archived threads:'
 
 for thread in $(ls -td [0-9]* 2>/dev/null)
 do
-	stamp="${thread%_*}"
-	no="${thread#*_}"
-
 	cd $thread
 
-	if [[ -e archive ]]
+	stamp=$(cat stamp)
+
+	if [ -e archive ]
 	then
-		printf "1[thread] %s (%s)	$CHAN_ROOT/$thread	$SERVER_HOST	$SERVER_PORT\r\n" "$(cat gophertag)" $(date -d @$stamp +"$DATE_FORMAT")
+		phitem 1 "[thread] $(cat gophertag) $(date -d @$stamp +"$DATE_FORMAT")" "$CHAN_ROOT/$thread"
 	fi
 
 	cd ..

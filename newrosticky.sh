@@ -10,8 +10,9 @@ else
 fi
 no=$(($no + 1))
 
-thread="$stamp"_"$no"
+thread="$no"
 
 mkdir sticky_$thread
 ln template_readonly_gophermap sticky_$thread/gophermap
 echo "$@" > sticky_$thread/gophertag
+echo $stamp > sticky_$thread/stamp

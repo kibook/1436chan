@@ -1,7 +1,9 @@
 DEPENDENCIES
 _____________________________________________________________________
     
-    Bash and core utils
+    - phtools
+    - Bash
+    - core utils
 
 
 INSTALLING/UPGRADING
