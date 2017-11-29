@@ -18,7 +18,7 @@ else
 fi
 no=$(($no + 1))
 
-post="$no"
+post="$stamp"_"$no"
 
 touch $thread/$post
 vi $thread/$post
