@@ -24,7 +24,7 @@ do
 	phitem 1 "[sticky] $(cat $sticky/gophertag)" "$CHAN_ROOT/$sticky"
 done
 
-if [ $(echo $stickies | wc -l) -gt 0 ]
+if [ $(echo -n $stickies | wc -l) -gt 0 ]
 then
 	phline
 fi
