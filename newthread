@@ -19,71 +19,80 @@ no=$(($no + 1))
 stamp=$(date +%s)
 post=$no
 
+if [ "$MAX_THREADS" -lt 1 ]
+then
+	pherror 'New threads are disabled on this board.'
+	phitem 1 Return "$CHAN_ROOT"
+	exit 1
+fi
+
 if [ "$comment" = "" ]
 then
-	pherror 'Thread creation failed.'
-	phinfo 'You must include a title.'
-else
-	nthreads=$(ls -d [0-9]* 2>/dev/null | wc -l)
-	narchive=$(ls -d [0-9]*/archive 2>/dev/null | wc -l)
+	pherror 'Thread creation failed: You must include a title'
+	phitem 1 Return "$CHAN_ROOT"
+	exit 1
+fi
 
-	if [ $(($nthreads - $narchive)) -ge $MAX_THREADS ]
-	then
-		for thread in $(ls -dt [0-9]* 2>/dev/null)
-		do
-			if [ -e $thread/archive ]
-			then
-				continue
-			else
-				old=$thread
-			fi
-		done
+nthreads=$(ls -d [0-9]* 2>/dev/null | wc -l)
+narchive=$(ls -d [0-9]*/archive 2>/dev/null | wc -l)
 
-		if [ "$ENABLE_ARCHIVE" != n ]
+if [ $((nthreads - narchive)) -ge "$MAX_THREADS" ]
+then
+	for thread in $(ls -dt [0-9]* 2>/dev/null)
+	do
+		if [ -e $thread/archive ]
 		then
-			sh archive.sh $old
-
-			if [ ! -e $old/archive ]
-			then
-				pherror 'ERROR: Failed to archive thread!'
-				phitem 1 Return "$CHAN_ROOT"
-				exit
-			fi
+			continue
 		else
-			rm -r $old
+			old=$thread
+		fi
+	done
 
-			if [ -e $old ]
-			then
-				pherror 'ERROR: Failed to remove thread!'
-				phitem 1 Return "$CHAN_ROOT"
-				exit
-			fi
+	if [ "$ENABLE_ARCHIVE" != n ]
+	then
+		sh archive.sh $old
+
+		if [ ! -e $old/archive ]
+		then
+			pherror 'Failed to archive thread!'
+			phitem 1 Return "$CHAN_ROOT"
+			exit
+		fi
+	else
+		rm -r $old
+
+		if [ -e $old ]
+		then
+			pherror 'Failed to remove thread!'
+			phitem 1 Return "$CHAN_ROOT"
+			exit
 		fi
 	fi
+fi
 
-	mkdir $post
+mkdir $post
 
-	if [ -e $post ]
-	then
-		echo "$comment" > $post/gophertag
+if [ -e $post ]
+then
+	echo "$comment" > $post/gophertag
 
-		ln template_gophermap $post/gophermap
-		ln template_post $post/post
-		ln template_postlink $post/postlink
-		ln template_postfile $post/postfile
-		ln template_postsplr $post/postsplr
-		ln template_postfileb64 $post/postfileb64
-		ln template_postb64 $post/postb64
+	ln template_gophermap $post/gophermap
+	ln template_post $post/post
+	ln template_postlink $post/postlink
+	ln template_postfile $post/postfile
+	ln template_postsplr $post/postsplr
+	ln template_postfileb64 $post/postfileb64
+	ln template_postb64 $post/postb64
 
-		touch $post/postcache
-		echo $stamp > $post/stamp
+	touch $post/postcache
+	echo $stamp > $post/stamp
 
-		phinfo 'Thread created successfully!'
-		phitem 1 'View thread' "$CHAN_ROOT/$post"
+	phinfo 'Thread created successfully!'
+	phitem 1 'View thread' "$CHAN_ROOT/$post"
 
-		echo $no > threads
-	else
-		pherror 'Could not create thread.'
-		phitem 1 Return "$CHAN_ROOT"
-	fi
+	echo $no > threads
+else
+	pherror 'Could not create thread.'
+	phitem 1 Return "$CHAN_ROOT"
+	exit 1
 fi
