@@ -1,9 +1,9 @@
 This file pertains to the Github repository of 1436chan, for general information see README.
 
 # 1436chan home
-gopher://khzai.net/1/chan
+gopher://khzae.net/1/chan
 
-http://khzai.net/1/chan (via [Bucky](https://github.com/kibook/bucky))
+http://khzae.net/1/chan (via [Bucky](https://github.com/kibook/bucky))
 
 
 # Installing (via github)
