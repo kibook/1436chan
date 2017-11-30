@@ -17,12 +17,14 @@ then
 	phline
 fi
 
-for sticky in $(ls -td sticky_* 2>/dev/null)
+stickies=$(ls -td sticky_* 2>/dev/null)
+
+for sticky in $stickies
 do
 	phitem 1 "[sticky] $(cat $sticky/gophertag)" "$CHAN_ROOT/$sticky"
 done
 
-if [ $(ls -td sticky_* 2>/dev/null | wc -l) -gt 0 ]
+if [ $(echo $stickies | wc -l) -gt 0 ]
 then
 	phline
 fi
