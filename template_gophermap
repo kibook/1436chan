@@ -6,9 +6,9 @@ thread=$(echo $(basename $(pwd)) | sed 's/sticky_//g')
 
 threadstamp=$(cat stamp)
 
-if [ ! -e "../params.sh" ]
+if [ ! -e ../params.sh ]
 then
-	exit
+	exit 1
 fi
 
 . ../params.sh

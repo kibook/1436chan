@@ -4,13 +4,13 @@ cd $(dirname "$0")
 
 if [ ! -e ../params.sh ]
 then
-	exit
+	exit 1
 fi
 
 . ../params.sh
 
 comment="$@"
-len=$(echo "$comment" | wc -c)
+len=$(echo -n "$comment" | wc -c)
 
 id=$(basename $(pwd))
 

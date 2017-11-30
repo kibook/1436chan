@@ -1,39 +1,39 @@
-#!/bin/bash
+#!/bin/sh
 
-cd "${0%/*}"
+cd $(dirname "$0")
+
+id=$(basename $(pwd))
 
 if [ ! "$@" ]
 then
-	exit 1
+	pherror 'Post failed: No URL specified.'
+	phitem 1 'Return to thread' "$CHAN_ROOT/$id"
 fi
 
 if [ ! -e ../params.sh ]
 then
-	exit
-fi
-
-source ../params.sh
-
-if [[ "$MAX_POSTS" -gt 0 && $(ls [0-9]* 2>/dev/null | wc -l) -ge $MAX_POSTS ]]
-then
-	printf "3Post failed.	fake	(NULL)	0\r\n"
-	printf "iPost limit reached ($MAX_POSTS)	fake	(NULL)	0\r\n"
-	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
 	exit 1
 fi
 
-if [ ! $MAX_UPLOAD -gt 0 ]
+. ../params.sh
+
+if [ "$MAX_POSTS" -gt 0 ] && [ $(ls [0-9]* 2>/dev/null | wc -l) -ge "$MAX_POSTS" ]
 then
-	printf "3Uploads are disabled	fake	(NULL)	0\r\n"
-	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+	pherror "Post failed: Post limit reached ($MAX_POSTS)"
+	phitem 1 'Return to thread' "$CHAN_ROOT/$id"
 	exit 1
 fi
 
-id=$(basename $(pwd))
+if [ "$MAX_UPLOAD" -le 0 ]
+then
+	pherror 'Uploads are disabled.'
+	phitem 1 'Return to thread' "$CHAN_ROOT/$id"
+	exit 1
+fi
 
 stamp=$(date +%s)
 
-if [[ -e ../posts ]]
+if [ -e ../posts ]
 then
 	no=$(cat ../posts)
 else
@@ -45,18 +45,18 @@ post="$stamp"_"$no"
 
 url=$(echo "$@" | cut -c1-$MAX_POSTLEN)
 
-if [[ "$url" != *"://"* ]]
+if ! echo "$url" | grep -q '://'
 then
-	printf "3Invalid URL: $url	fake	(NULL)	0\r\n"
-	printf "iYou must include the protocol (http://, gopher://, etc.)	fake	(NULL)	0\r\n"
-	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+	pherror "Invalid URL: $url"
+	phinfo 'You must include the protocol (http://, gopher://, etc.)'
+	phitem 1 'Return to thread'
 	exit 1
 fi
 
-proto="${url%://*}"
-uri="${url##*://}"
+proto=$(echo "$url" | sed -r 's/^([^:]+):\/\/.+$/\1/')
+uri=$(echo "$url" | sed -r 's/^[^:]+:\/\/(.+)$/\1/')
 
-if [[ "$proto" == *" "* ]]
+if echo "$proto" | grep -q ' '
 then
 	dis=$(echo "$proto" | rev | cut -f 2- -d ' ' | rev | cut -c1-70)
 	proto=$(echo "$proto" | rev | cut -f 1 -d ' ' | rev)
@@ -64,18 +64,17 @@ else
 	dis=$(echo "$url" | cut -c1-70)
 fi
 
-if [[ ! "$proto" ]]
+if [ ! "$proto" ]
 then
-	printf "3Invalid URL: $url	fake	(NULL)	0\r\n"
-	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+	pherror "Invalid URL: $url"
+	phitem 1 'Return to thread' "$CHAN_ROOT/$id"
 	exit 1
 fi
 
-res="${uri##*/}"
-res="${res%%\?*}"
-ext="${res##*.}"
+res=$(echo "$uri" | rev | cut -d / -f 1 | rev)
+ext=$(echo "$res" | rev | cut -d . -f 1 | rev)
 
-if [[ "$ext" == "$res" ]]
+if [ "$ext" = "$res" ]
 then
 	ext=""
 fi
@@ -87,16 +86,16 @@ then
 	size=0
 fi
 
-if [ $size -gt $MAX_UPLOAD ]
+if [ "$size" -gt "$MAX_UPLOAD" ]
 then
-	printf "3File too large ($size/$MAX_UPLOAD bytes)	fake	(NULL)	0\r\n"
-	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+	pherror "File too large ($size/$MAX_UPLOAD bytes)"
+	phitem 1 'Return to thread' "$CHAN_ROOT/$id"
 	exit 1
 fi
 
 cd ..
 
-if [[ ! "$ext" ]]
+if [ ! "$ext" ]
 then
 	fname="file_$post"
 else
@@ -104,6 +103,7 @@ else
 fi
 
 curl -L "$proto://$uri" > "$fname" -m 3 --limit-rate $MAX_UPLOAD
+err=$?
 
 size=$(stat --printf "%s" "$fname")
 
@@ -112,18 +112,17 @@ then
 	size=0
 fi
 
-if [[ $size -gt $MAX_UPLOAD || $? -ne 0 ]]
+if [ "$size" -gt "$MAX_UPLOAD" ] || [ $err -ne 0 ]
 then
-	printf "3Failed to fetch file (too large or timed out).	fake	(NULL)	0\r\n"
-	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+	pherror 'Failed to fetch file (too large or timed out).'
+	phitem 1 'Return to thread' "$CHAN_ROOT/$id"
 	rm -f "$fname"
 	exit 1
 fi
 
-mime=$(file -i -b "$fname")
-mime="${mime%;*}"
+mime=$(file -i -b "$fname" | cut -d ';' -f 1)
 
-if [[ "$MAX_IMAGE" && "$mime" == "image/"* ]]
+if [ "$MAX_IMAGE" ] && echo "$mime" | grep -q 'image/'
 then
 	maxw=$(echo $MAX_IMAGE | cut -f 1 -d 'x')
 	maxh=$(echo $MAX_IMAGE | cut -f 2 -d 'x')
@@ -131,10 +130,10 @@ then
 	imgw=$(echo $dims | cut -f 1 -d 'x')
 	imgh=$(echo $dims | cut -f 2 -d 'x')
 
-	if [[ $imgw -gt $maxw || $imgh -gt $maxh ]]
+	if [ $imgw -gt $maxw ] || [ $imgh -gt $maxh ]
 	then
-		printf "3Image too large ($imgw x $imgh, max $maxw x $maxh)	fake	(NULL)	0\r\n"
-		printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+		pherror "Image too large ($imgw x $imgh, max $maxw x $maxh)"
+		phitem 1 'Return to thread' "$CHAN_ROOT/$id"
 		rm -f "$fname"
 		exit 1
 	fi
@@ -151,7 +150,7 @@ case "$mime" in
 	*)		type='9';;
 esac
 
-if [[ ! "$ext" ]]
+if [ ! "$ext" ]
 then
 	case "$mime" in
 		"video/webm")	ext="webm";;
@@ -162,7 +161,7 @@ then
 		*)		ext=""
 	esac
 	
-	if [[ "$ext" != "" ]]
+	if [ "$ext" = '' ]
 	then
 		mv "$fname" "$fname.$ext"
 		fname="$fname.$ext"
@@ -175,63 +174,62 @@ cd $id
 
 # quotes
 targetno=$(echo "$dis" | sed -r 's/>>([0-9]+) ?.*/\1/')
-if  [[ "$dis" == ">>"* && "$targetno" -gt 0 ]]
+if echo "$dis" | grep -q '^>>.*'
 then
-	target=$(ls ../[0-9]*_*/[0-9]*_$targetno 2>/dev/null | head -n 1)
-	target="${target#../}"
+	target=$(find .. -name "[0-9]*_$targetno" | head -n 1)
 
-	if [[ ! "$target" ]]
+	if [ ! -e "$target" ]
 	then
-		printf "3Post #$targetno does not exist!	fake	(NULL)	0\r\n"
-		printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+		pherror "Post #$targetno does not exist."
+		phitem 1 'Return to thread' "$CHAN_ROOT/$id"
 		exit 1
 	fi
 
-	thread="${target%/*}"
+	thread=$(echo "$target" | cut -d / -f 2)
 
-	if [[ "$thread" == "$id" ]]
+	if [ "$thread" = "$id" ]
 	then
 		echo "#$targetno said:" >> $post
 	else
-		echo "1$targetno said:	$CHAN_ROOT/$thread	$SERVER_HOST	$SERVER_PORT" >> $post
+		echo "1#$targetno said:	$CHAN_ROOT/$thread	$SERVER_HOST	$SERVER_PORT" >> $post
 	fi
 
 	saveifs="$IFS"
 	IFS=''
-	while read -r line
+	cat $target | while read -r line
 	do
-		if echo "$line" | grep -q -v "	"
+		if echo "$line" | grep -v -q "	"
 		then
-			while read -r fmtline
+			echo "$line" | fmt -66 -s | fold -w 66 | while read -r fmtline
 			do
 				echo "  >$fmtline" >> $post
-			done < <(echo "$line" | fmt -66 -s | fold -w 66)
+			done
 		else
 			kind=$(echo "$line" | head -c 1)
 			rest=$(echo "$line" | tail -c +2)
 			echo "$kind  >$rest" >> $post
 		fi
-	done < ../$target
+	done
 	IFS="$saveifs"
 
-	dis=$(echo "$dis" | sed -r 's/>>[0-9]+ ?(.*)/\1/')
+	dis=$(echo "$dis" | sed -r 's/>>[0-9]+ ?(.*)/\1/' | sed 's/	/    /g')
+fi
 
-	if [[ ! "$dis" ]]
-	then
-		dis="$proto://$uri"
-	fi
+if [ "$dis" = '' ]
+then
+	dis="$proto://$uri"
 fi
 
 printf "$type$dis	$CHAN_ROOT/$id/$fname	$SERVER_HOST	$SERVER_PORT\r\n" >> $post
 
 if [ -e $post ]
 then
-	printf "iPost successful!	fake	(NULL)	0\r\n"
+	phinfo 'Post successful!'
 
 	echo $no > ../posts
 	../updatepostcache $id $post >> postcache
 else
-	printf "3Could not post.	fake	(NULL)	0\r\n"
+	pherror 'Could not post.'
 fi
 
-printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+phitem 1 'Return to thread' "$CHAN_ROOT/$id"
