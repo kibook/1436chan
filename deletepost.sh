@@ -17,3 +17,5 @@ thread=$(echo $post | cut -f 1 -d /)
 
 rm $post
 sh updatepostcache.sh $thread > $thread/postcache
+
+sh updatethreadcache.sh > threadcache

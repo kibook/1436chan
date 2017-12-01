@@ -7,3 +7,5 @@ then
 fi
 
 rm -r $thread
+
+sh updatethreadcache.sh > threadcache
