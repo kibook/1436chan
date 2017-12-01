@@ -7,16 +7,16 @@ cd $(dirname "$0")
 phitem 1 Return "$CHAN_ROOT"
 phline
 
-threads=$(ls -td [0-9]* 2>/dev/null)
+narchived=$(ls -td [0-9]*/archive 2>/dev/null | wc -l)
 
-if [ $(echo -n $threads | grep -c .) -eq 0 ]
+if [ $narchived -eq 0 ]
 then
 	phinfo 'There are no archived threads.'
 else
 	phinfo 'Archived threads:'
 fi
 
-for thread in $threads
+for thread in $(ls -td [0-9]* 2>/dev/null)
 do
 	cd $thread
 
