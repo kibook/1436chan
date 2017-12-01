@@ -103,7 +103,11 @@ then
 	printf "iPost successful!	fake	(NULL)	0\r\n"
 
 	echo $no > ../posts
+
 	sh ../updatepostcache.sh $id $post >> postcache
+
+	cd ..
+	sh updatethreadcache.sh > threadcache
 else
 	printf "3Could not post.	fake	(NULL)	0\r\n"
 fi

@@ -91,6 +91,8 @@ then
 	phitem 1 'View thread' "$CHAN_ROOT/$post"
 
 	echo $no > threads
+
+	sh updatethreadcache.sh > threadcache
 else
 	pherror 'Could not create thread.'
 	phitem 1 Return "$CHAN_ROOT"

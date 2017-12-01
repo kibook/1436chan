@@ -11,6 +11,7 @@ then
 	rm -rf sticky_*
 	rm -f threads
 	rm -f posts
+	rm -f threadcache
 else
 	echo "Aborted."
 fi

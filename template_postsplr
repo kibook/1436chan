@@ -99,7 +99,11 @@ then
 	phinfo 'Post successful!'
 	mv ../s_$post ./
 	echo $no > ../posts
+
 	sh ../updatepostcache.sh $id $post >> postcache
+
+	cd ..
+	sh updatethreadcache.sh > threadcache
 else
 	pherror 'Could not post.'
 	rm ../s_$post
