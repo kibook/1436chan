@@ -125,7 +125,7 @@ do
 
 	rm -f $thread/postcache
 
-	./updatepostcache $thread > $thread/postcache
+	sh updatepostcache.sh $thread > $thread/postcache
 
 	touch $thread
 done
@@ -157,7 +157,7 @@ do
 
 	rm -f $thread/postcache
 
-	./updatepostcache $thread > $thread/postcache
+	sh updatepostcache.sh $thread > $thread/postcache
 
 	touch $thread
 done

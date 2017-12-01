@@ -16,4 +16,4 @@ fi
 thread=$(echo $post | cut -f 1 -d /)
 
 rm $post
-./updatepostcache $thread > $thread/postcache
+sh updatepostcache.sh $thread > $thread/postcache

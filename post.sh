@@ -22,6 +22,6 @@ post="$stamp"_"$no"
 
 touch $thread/$post
 vi $thread/$post
-./updatepostcache $thread $post >> $thread/postcache
+sh updatepostcache.sh $thread $post >> $thread/postcache
 
 echo $no > posts
