@@ -27,6 +27,14 @@ _____________________________________________________________________
     which are stored in params.sh. This section outlines what
     each of these options means:
 
+    SERVER_HOST
+    	This is the hostname of the Gopher server that the board is
+	running on.
+
+    SERVER_PORT
+    	This is the port of the Gopher server that the board is
+	running on.
+
     CHAN_ROOT
         This is the root selector of your board.
 
