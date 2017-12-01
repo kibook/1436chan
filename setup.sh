@@ -3,6 +3,8 @@
 if [ -e "params.sh" ]
 then
 	. ./params.sh
+	DEFAULT_SERVER_HOST="$SERVER_HOST"
+	DEFAULT_SERVER_PORT="$SERVER_PORT"
 	DEFAULT_CHAN_ROOT="$CHAN_ROOT"
 	DEFAULT_MAX_THREADS=$MAX_THREADS
 	DEFAULT_MAX_TITLELEN=$MAX_TITLELEN
@@ -15,6 +17,8 @@ then
 	DEFAULT_MAX_UPLOAD=$MAX_UPLOAD
 	DEFAULT_MAX_IMAGE=$MAX_IMAGE
 else
+	DEFAULT_SERVER_HOST=localhost
+	DEFAULT_SERVER_PORT=70
 	DEFAULT_CHAN_ROOT=/$(basename $(pwd))
 	DEFAULT_MAX_THREADS=15
 	DEFAULT_MAX_TITLELEN=40
@@ -30,6 +34,8 @@ fi
 
 if [ "$1" != "-quick" ]
 then
+	read -p "Hostname of the server [$DEFAULT_SERVER_HOST]: " SERVER_HOST
+	read -p "Port of the server [$DEFAULT_SERVER_PORT]: " SERVER_PORT
 	read -p "Selector for the board [$DEFAULT_CHAN_ROOT]: " CHAN_ROOT
 	read -p "Max threads [$DEFAULT_MAX_THREADS]: " MAX_THREADS
 	read -p "Max thread title length [$DEFAULT_MAX_TITLELEN]: " MAX_TITLELEN
@@ -51,6 +57,8 @@ then
 	read -p "Maximum image dimensions (WxH) [5000x5000]: " MAX_IMAGE
 fi
 
+if [ -z "$SERVER_HOST" ]; then SERVER_HOST="$DEFAULT_SERVER_HOST"; fi
+if [ -z "$SERVER_PORT" ]; then SERVER_PORT="$DEFAULT_SERVER_PORT"; fi
 if [ -z "$CHAN_ROOT" ]; then CHAN_ROOT="$DEFAULT_CHAN_ROOT"; fi
 if [ -z "$MAX_THREADS" ]; then MAX_THREADS=$DEFAULT_MAX_THREADS; fi
 if [ -z "$MAX_TITLELEN" ]; then MAX_TITLELEN=$DEFAULT_MAX_TITLELEN; fi
@@ -63,7 +71,9 @@ if [ -z "$LAST_POSTS" ]; then LAST_POSTS=$DEFAULT_LAST_POSTS; fi
 if [ -z "$MAX_UPLOAD" ]; then MAX_UPLOAD=$DEFAULT_MAX_UPLOAD; fi
 if [ -z "$MAX_IMAGE" ]; then MAX_IMAGE=$DEFAULT_MAX_IMAGE; fi
 
-echo "CHAN_ROOT=$CHAN_ROOT" > params.sh
+echo "SERVER_HOST=$SERVER_HOST" > params.sh
+echo "SERVER_PORT=$SERVER_PORT" >> params.sh
+echo "CHAN_ROOT=$CHAN_ROOT" >> params.sh
 echo "MAX_THREADS=$MAX_THREADS" >> params.sh
 echo "MAX_TITLELEN=$MAX_TITLELEN" >> params.sh
 echo "MAX_POSTS=$MAX_POSTS" >> params.sh
@@ -161,6 +171,8 @@ do
 
 	touch $thread
 done
+
+sh updatethreadcache.sh > threadcache
 
 # postcache permissions
 chmod -f g+w [0-9]*/postcache
