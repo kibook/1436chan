@@ -6,11 +6,6 @@ cd $(dirname "$0")
 
 . ./params.sh
 
-if [ "$arg" = catalog ]
-then
-	LAST_POSTS=0
-fi
-
 if [ -e motd ]
 then
 	cat motd | phmenu
