@@ -25,3 +25,5 @@ vi $thread/$post
 sh updatepostcache.sh $thread $post >> $thread/postcache
 
 echo $no > posts
+
+sh updatethreadcache.sh > threadcache

@@ -8,7 +8,13 @@ cd $(dirname "$0")
 
 if [ -e motd ]
 then
-	cat motd | phmenu
+	if [ -x motd ]
+	then
+		./motd
+	else
+		cat motd | phmenu
+	fi
+
 	phline
 fi
 
