@@ -220,7 +220,7 @@ then
 	dis="$proto://$uri"
 fi
 
-printf "$type$dis	$CHAN_ROOT/$id/$fname	$SERVER_HOST	$SERVER_PORT\r\n" >> $post
+printf "$type$dis	$CHAN_ROOT/$id/$fname	$SERVER_HOST	$SERVER_PORT" >> $post
 
 if [ -e $post ]
 then
