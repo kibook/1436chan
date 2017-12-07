@@ -52,9 +52,9 @@ then
 fi
 
 # quotes
-targetno=$(echo "$comment" | sed -r 's/>>([0-9]+) ?.*/\1/')
-if echo "$comment" | grep -q '^>>.*'
+if echo "$comment" | grep -Eq '^>>[0-9]+ ?.*$'
 then
+	targetno=$(echo "$comment" | sed -r 's/>>([0-9]+) ?.*/\1/')
 	target=$(find .. -name "[0-9]*_$targetno" | head -n 1)
 
 	if [ ! -e "$target" ]

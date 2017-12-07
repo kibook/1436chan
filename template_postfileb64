@@ -179,7 +179,7 @@ then
 	fi
 fi
 
-printf "$type$disp	$CHAN_ROOT/$id/$fname	$SERVER_HOST	$SERVER_PORT" >> $post
+echo "$type$disp	$CHAN_ROOT/$id/$fname	$SERVER_HOST	$SERVER_PORT" >> $post
 
 if [ -e $post ]
 then

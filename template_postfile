@@ -173,9 +173,9 @@ mv "$fname" $id/
 cd $id
 
 # quotes
-targetno=$(echo "$dis" | sed -r 's/>>([0-9]+) ?.*/\1/')
-if echo "$dis" | grep -q '^>>.*'
+if echo "$dis" | grep -Eq '^>>[0-9]+ ?.*$'
 then
+	targetno=$(echo "$dis" | sed -r 's/>>([0-9]+) ?.*/\1/')
 	target=$(find .. -name "[0-9]*_$targetno" | head -n 1)
 
 	if [ ! -e "$target" ]
@@ -220,7 +220,7 @@ then
 	dis="$proto://$uri"
 fi
 
-printf "$type$dis	$CHAN_ROOT/$id/$fname	$SERVER_HOST	$SERVER_PORT" >> $post
+echo "$type$dis	$CHAN_ROOT/$id/$fname	$SERVER_HOST	$SERVER_PORT" >> $post
 
 if [ -e $post ]
 then
