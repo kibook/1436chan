@@ -96,7 +96,7 @@ fi
 
 if [ "$dis" = '' ]
 then
-	dis="$proto://$uri"
+	dis=$(echo "$proto://$uri" | cut -c1-70)
 fi
 
 case $proto in
