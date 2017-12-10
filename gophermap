@@ -43,3 +43,13 @@ then
 	phline
 	phitem 1 Archive "$CHAN_ROOT/archive"
 fi
+
+if [ -e foot ]
+then
+	if [ -x foot ]
+	then
+		./foot
+	else
+		cat foot | phmenu
+	fi
+fi
