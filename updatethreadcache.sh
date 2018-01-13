@@ -51,7 +51,7 @@ do
 			then
 				printf "%s\r\n" "$line"
 			else
-				echo "$line" | fmt -70 | fold -w 70 | while read -r fmtline
+				printf "%s\n" "$line" | fmt -70 | fold -w 70 | while read -r fmtline
 				do
 					phinfo "$fmtline"
 				done
