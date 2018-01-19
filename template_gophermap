@@ -42,3 +42,7 @@ then
 	phitem 7 "Upload image/file from URL (max $((MAX_UPLOAD / 1000)) kB)" "$REQUEST/postfile"
 fi
 phitem 7 'Reply with spoiler' "$REQUEST/postsplr"
+if [ "$DELETE_TIME" -gt 0 ]
+then
+	phitem 7 'Delete post' "$CHAN_ROOT/delete"
+fi

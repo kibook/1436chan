@@ -1,0 +1,43 @@
+#!/bin/sh
+
+cd $(dirname "$0")
+
+. ./params.sh
+
+no="$1"
+pass=$(sh pass.sh)
+date=$(date +%s)
+
+cat "$DATA_DIR/postpass" | while read n p d
+do
+	if [ "$no" = "$n" ]
+	then
+		if test "$pass" = "$p"
+		then
+			if test $((date - d)) -lt $DELETE_TIME
+			then
+				sh deletepost.sh "$n"
+				exit 2
+			else
+				exit 1
+			fi
+		else
+			exit 3
+		fi
+	fi
+done
+
+err="$?"
+
+case "$err" in
+	0)	pherror "Cannot delete post: Does not exist"
+		;;
+	1)	pherror "Cannot delete post: Too old"
+		;;
+	2)	phinfo "Post deleted successfully!"
+		;;
+	3)	phinfo "Cannot delete post"
+		;;
+esac
+
+phitem 1 'Return' "$CHAN_ROOT"

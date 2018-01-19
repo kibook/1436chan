@@ -101,6 +101,8 @@ then
 	phinfo 'Post successful!'
 
 	echo $no > ../posts
+
+	sh ../addpostpass.sh $no
 	
 	sh ../updatepostcache.sh $id $post >> postcache
 

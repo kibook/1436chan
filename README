@@ -94,6 +94,15 @@ _____________________________________________________________________
         Maximum dimensions of an uploaded image (WxH). Leave blank
 	to disable.
 
+    DATA_DIR
+        Directory where extra data will be stored. Should be a
+	directory outside the gopher server root but with the same
+	permissions as CHAN_ROOT.
+
+    DELETE_TIME
+        Number of seconds within which a user may delete their own
+	post. Set to 0 to disable this feature.
+
 
 ADMINISTRATOR UTILITY
 _____________________________________________________________________
