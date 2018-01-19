@@ -30,13 +30,11 @@ done
 err="$?"
 
 case "$err" in
-	0)	pherror "Cannot delete post: Does not exist"
+	0|3)	pherror "Cannot delete post"
 		;;
 	1)	pherror "Cannot delete post: Too old"
 		;;
 	2)	phinfo "Post deleted successfully!"
-		;;
-	3)	phinfo "Cannot delete post"
 		;;
 esac
 
