@@ -110,6 +110,11 @@ then
 fi
 chmod -f g+w threads posts
 
+if [ ! -e "$DATA_DIR" ]
+then
+	mkdir "$DATA_DIR"
+fi
+touch "$DATA_DIR/postpass"
 chmod -Rf g+w "$DATA_DIR"
 chmod -f g+s "$DATA_DIR"
 
