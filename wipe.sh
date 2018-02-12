@@ -12,6 +12,7 @@ then
 	rm -f threads
 	rm -f posts
 	rm -f threadcache
+	rm -f rss.xml
 else
 	echo "Aborted."
 fi

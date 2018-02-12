@@ -234,6 +234,11 @@ then
 
 	cd ..
 	sh updatethreadcache.sh > threadcache
+
+	if [ "$MAX_RSS_ITEMS" -gt 0 ]
+	then
+		sh updaterss.sh $id $no "$comment"
+	fi
 else
 	pherror 'Could not post.'
 fi

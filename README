@@ -103,6 +103,10 @@ _____________________________________________________________________
         Number of seconds within which a user may delete their own
 	post. Set to 0 to disable this feature.
 
+    MAX_RSS_ITEMS
+        Maximum number of feed items in the RSS feed. Set to 0 to
+	disable the RSS feed entirely.
+
 
 ADMINISTRATOR UTILITY
 _____________________________________________________________________

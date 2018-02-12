@@ -18,6 +18,7 @@ then
 	DEFAULT_MAX_IMAGE=$MAX_IMAGE
 	DEFAULT_DATA_DIR=$DATA_DIR
 	DEFAULT_DELETE_TIME=$DELETE_TIME
+	DEFAULT_MAX_RSS_ITEMS=$MAX_RSS_ITEMS
 else
 	DEFAULT_SERVER_HOST=localhost
 	DEFAULT_SERVER_PORT=70
@@ -34,6 +35,7 @@ else
 	DEFAULT_MAX_IMAGE=5000x5000
 	DEFAULT_DATA_DIR=/var/1436chan
 	DEFAULT_DELETE_TIME=600
+	DEFAULT_MAX_RSS_ITEMS=10
 fi
 
 if [ "$1" != "-quick" ]
@@ -61,6 +63,7 @@ then
 	read -p "Maximum image dimensions (WxH) [$DEFAULT_MAX_IMAGE]: " MAX_IMAGE
 	read -p "Data directory [$DEFAULT_DATA_DIR]: " DATA_DIR
 	read -p "Time limit to delete posts [$DEFAULT_DELETE_TIME]: " DELETE_TIME
+	read -p "Max RSS items [$DEFAULT_MAX_RSS_ITEMS]: " MAX_RSS_ITEMS
 fi
 
 if [ -z "$SERVER_HOST" ]; then SERVER_HOST="$DEFAULT_SERVER_HOST"; fi
@@ -78,6 +81,7 @@ if [ -z "$MAX_UPLOAD" ]; then MAX_UPLOAD=$DEFAULT_MAX_UPLOAD; fi
 if [ -z "$MAX_IMAGE" ]; then MAX_IMAGE=$DEFAULT_MAX_IMAGE; fi
 if [ -z "$DATA_DIR" ]; then DATA_DIR=$DEFAULT_DATA_DIR; fi
 if [ -z "$DELETE_TIME" ]; then DELETE_TIME=$DEFAULT_DELETE_TIME; fi
+if [ -z "$MAX_RSS_ITEMS" ]; then MAX_RSS_ITEMS=$DEFAULT_MAX_RSS_ITEMS; fi
 
 echo "SERVER_HOST=$SERVER_HOST" > params.sh
 echo "SERVER_PORT=$SERVER_PORT" >> params.sh
@@ -94,6 +98,7 @@ echo "MAX_UPLOAD=$MAX_UPLOAD" >> params.sh
 echo "MAX_IMAGE=$MAX_IMAGE" >> params.sh
 echo "DATA_DIR=$DATA_DIR" >> params.sh
 echo "DELETE_TIME=$DELETE_TIME" >> params.sh
+echo "MAX_RSS_ITEMS=$MAX_RSS_ITEMS" >> params.sh
 
 # root permissions
 chmod -f g+w .
@@ -192,7 +197,13 @@ done
 
 sh updatethreadcache.sh > threadcache
 
+if [ "$MAX_RSS_ITEMS" -gt 0 ] && [ ! -e rss.xml ]
+then
+	sh initrss.sh
+fi
+
 # postcache permissions
 chmod -f g+w [0-9]*/postcache
 chmod -f g+w sticky_[0-9]*/postcache
 chmod -f g+w threadcache
+chmod -f g+w rss.xml
