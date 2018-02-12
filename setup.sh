@@ -197,7 +197,7 @@ done
 
 sh updatethreadcache.sh > threadcache
 
-if [ "$MAX_RSS_ITEMS" -gt 0 ] && [ ! -e rss.xml ]
+if [ "$MAX_RSS_ITEMS" -gt 0 ]
 then
 	sh initrss.sh
 fi

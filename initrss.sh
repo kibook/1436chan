@@ -2,7 +2,7 @@
 
 . ./params.sh
 
-cp template_rss.xml rss.xml
+cp -n template_rss.xml rss.xml
 
 xmlstarlet ed -L \
 	-u /rss/channel/title -v "$SERVER_HOST$CHAN_ROOT" \
