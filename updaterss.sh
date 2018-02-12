@@ -8,7 +8,7 @@ cd $(dirname "$0")
 
 . ./params.sh
 
-xmlstarlet ed -L -d '/rss/channel/item[position() >= 10]' rss.xml
+xmlstarlet ed -L -d "/rss/channel/item[position() >= $MAX_RSS_ITEMS]" rss.xml
 
 if xmlstarlet sel -Q -t -c /rss/channel/item rss.xml
 then
