@@ -12,7 +12,7 @@ protocol=$(echo "$1" | sed -r "s/$regex/\1/")
 type=$(echo "$1" | sed -r "s/$regex/\6/")
 selector=$(echo "$1" | sed -r "s/$regex/\7/")
 host=$(echo "$1" | sed -r "s/$regex/\2/")
-port=$(echo "$1" | sed -r "s/$regex/\3/")
+port=$(echo "$1" | sed -r "s/$regex/\4/")
 display="$2"
 
 if [ ! "$type" ]; then type=1; fi
