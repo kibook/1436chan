@@ -90,7 +90,7 @@ then
 	comment=$(echo "$comment" | sed -r 's/>>[0-9]+ ?(.*)/\1/' | sed 's/	/    /g')
 fi
 
-echo "$comment" > ../s_$post
+echo "$comment" | fmt -70 > ../s_$post
 
 echo "0*SPOILER*	$CHAN_ROOT/$id/s_$post	$SERVER_HOST	$SERVER_PORT" >> $post
 
