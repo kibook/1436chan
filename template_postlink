@@ -118,7 +118,7 @@ echo "$comment" >> $post
 
 if [ -e $post ]
 then
-	printf "iPost successfuly!	fake	(NULL)	0\r\n"
+	phinfo 'Post successful!'
 
 	echo $no > ../posts
 
