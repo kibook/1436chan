@@ -6,6 +6,25 @@ _____________________________________________________________________
     - core utils
 
 
+PHTOOLS
+_____________________________________________________________________
+
+    These are a set of utilities which 1436chan uses to create
+    dynamic menu content. They can be downloaded at:
+
+    http://github.com/kibook/phtools
+
+
+NOTES ON GOPHER SERVER COMPATIBILITY
+_____________________________________________________________________
+
+    1436chan has so far been developed/tested exclusively on the
+    Bucktooth gopher server. As long as a gopher server has support
+    for the following features, it should work without issue:
+
+    - Executable scripts ("moles")
+    - "gophermap" files which are executable scripts
+
 INSTALLING/UPGRADING
 _____________________________________________________________________
 
