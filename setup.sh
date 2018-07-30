@@ -19,6 +19,7 @@ then
 	DEFAULT_DATA_DIR=$DATA_DIR
 	DEFAULT_DELETE_TIME=$DELETE_TIME
 	DEFAULT_MAX_RSS_ITEMS=$MAX_RSS_ITEMS
+	DEFAULT_POST_LIMIT=$POST_LIMIT
 else
 	DEFAULT_SERVER_HOST=localhost
 	DEFAULT_SERVER_PORT=70
@@ -36,6 +37,7 @@ else
 	DEFAULT_DATA_DIR=/var/1436chan
 	DEFAULT_DELETE_TIME=600
 	DEFAULT_MAX_RSS_ITEMS=10
+	DEFAULT_POST_LIMIT=30
 fi
 
 if [ "$1" != "-quick" ]
@@ -64,6 +66,7 @@ then
 	read -p "Data directory [$DEFAULT_DATA_DIR]: " DATA_DIR
 	read -p "Time limit to delete posts [$DEFAULT_DELETE_TIME]: " DELETE_TIME
 	read -p "Max RSS items [$DEFAULT_MAX_RSS_ITEMS]: " MAX_RSS_ITEMS
+	read -p "Post cooldown [$DEFAULT_POST_LIMIT]: " POST_LIMIT
 fi
 
 if [ -z "$SERVER_HOST" ]; then SERVER_HOST="$DEFAULT_SERVER_HOST"; fi
@@ -82,6 +85,7 @@ if [ -z "$MAX_IMAGE" ]; then MAX_IMAGE=$DEFAULT_MAX_IMAGE; fi
 if [ -z "$DATA_DIR" ]; then DATA_DIR=$DEFAULT_DATA_DIR; fi
 if [ -z "$DELETE_TIME" ]; then DELETE_TIME=$DEFAULT_DELETE_TIME; fi
 if [ -z "$MAX_RSS_ITEMS" ]; then MAX_RSS_ITEMS=$DEFAULT_MAX_RSS_ITEMS; fi
+if [ -z "$POST_LIMIT" ]; then POST_LIMIT=$DEFAULT_POST_LIMIT; fi
 
 echo "SERVER_HOST=$SERVER_HOST" > params.sh
 echo "SERVER_PORT=$SERVER_PORT" >> params.sh
@@ -99,6 +103,7 @@ echo "MAX_IMAGE=$MAX_IMAGE" >> params.sh
 echo "DATA_DIR=$DATA_DIR" >> params.sh
 echo "DELETE_TIME=$DELETE_TIME" >> params.sh
 echo "MAX_RSS_ITEMS=$MAX_RSS_ITEMS" >> params.sh
+echo "POST_LIMIT=$POST_LIMIT" >> params.sh
 
 # root permissions
 chmod -f g+w .
@@ -115,11 +120,20 @@ then
 fi
 chmod -f g+w threads posts
 
+# setup data directory
 if [ ! -e "$DATA_DIR" ]
 then
 	mkdir "$DATA_DIR"
 fi
-touch "$DATA_DIR/postpass"
+if [ "$DELETE_TIME" -gt 0 ]
+then
+	touch "$DATA_DIR/postpass"
+fi
+if [ "$POST_LIMIT" -gt 0 ]
+then
+	touch "$DATA_DIR/postcooldown"
+	touch "$DATA_DIR/threadcooldown"
+fi
 chmod -Rf g+w "$DATA_DIR"
 chmod -f g+s "$DATA_DIR"
 

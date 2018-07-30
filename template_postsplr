@@ -9,14 +9,14 @@ fi
 
 . ../params.sh
 
+id=$(basename $(pwd))
+
 if [ "$MAX_POSTS" -gt 0 ] && [ $(ls [0-9]* 2>/dev/null | wc -l) -ge "$MAX_POSTS" ]
 then
 	pherror 'Post failed: Post limit reached'
 	phitem 1 'Return to thread' "$CHAN_ROOT/$id"
 	exit 1
 fi
-
-id=$(basename $(pwd))
 
 comment="$@"
 len=$(echo -n "$comment" | wc -c)
@@ -44,6 +44,15 @@ if [ $len -gt $MAX_POSTLEN ]
 then
 	pherror "Post failed: Comment too long ($len/$MAX_POSTLEN)"
 	phitem 1 'Return to thread' "$CHAN_ROOT/$id"
+	exit 1
+fi
+
+if ! sh ../cooldown.sh post
+then
+	pherror "Post failed"
+	phline
+	phinfo "Please wait $POST_LIMIT seconds before posting again."
+	phitem 1 "Return to thread" "$CHAN_ROOT/$id"
 	exit 1
 fi
 

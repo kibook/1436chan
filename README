@@ -126,6 +126,10 @@ _____________________________________________________________________
         Maximum number of feed items in the RSS feed. Set to 0 to
 	disable the RSS feed entirely.
 
+    POST_LIMIT
+        Number of seconds of cooldown time between posting/creating
+        new threads. Set to 0 to disable this feature.
+
 
 ADMINISTRATOR UTILITY
 _____________________________________________________________________

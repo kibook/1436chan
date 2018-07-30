@@ -33,6 +33,15 @@ then
 	exit 1
 fi
 
+if ! sh cooldown.sh thread
+then
+	pherror "Thread creation failed"
+	phline
+	phinfo "Please wait $POST_LIMIT seconds before creating a new thread."
+	phitem 1 "Return" "$CHAN_ROOT"
+	exit 1
+fi
+
 nthreads=$(ls -d [0-9]* 2>/dev/null | wc -l)
 narchive=$(ls -d [0-9]*/archive 2>/dev/null | wc -l)
 

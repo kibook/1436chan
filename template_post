@@ -2,28 +2,29 @@
 
 cd $(dirname "$0")
 
-if [ ! -e ../params.sh ]
+if ! test -e ../params.sh
 then
 	exit 1
 fi
 
 . ../params.sh
 
+id=$(basename $(pwd))
+
+if test "$MAX_POSTS" -gt 0 -a $(find -name '[0-9]*' | wc -l) -ge "$MAX_POSTS"
+then
+	pherror "Post failed."
+	phinfo "Post limit reached ($MAX_POSTS)"
+	phitem 1 "Return to thread" "$CHAN_ROOT/$id"
+	exit 1
+fi
+
 comment="$@"
 len=$(echo -n "$comment" | wc -c)
 
-id=$(basename $(pwd))
-
 stamp=$(date +%s)
 
-if [ "$MAX_POSTS" -gt 0 ] && [ $(find -name '[0-9]*' | wc -l) -ge "$MAX_POSTS" ]
-then
-	pherror 'Post failed.'
-	phinfo "Post limit reached ($MAX_POSTS)"
-	phitem 1 'Return to thread' "$CHAN_ROOT/$id"
-fi
-
-if [ -e ../posts ]
+if test -e ../posts
 then
 	no=$(cat ../posts)
 else
@@ -33,21 +34,30 @@ no=$((no + 1))
 
 post="$stamp"_"$no"
 
-if [ "$comment" = "" ]
+if test "$comment" = ""
 then
-	pherror 'Post failed.'
+	pherror "Post failed."
 	phline
-	phinfo 'You must post a comment.'
-	phitem 1 'Return to thread' "$CHAN_ROOT/$id"
+	phinfo "You must post a comment."
+	phitem 1 "Return to thread" "$CHAN_ROOT/$id"
 	exit 1
 fi
 
-if [ "$len" -gt "$MAX_POSTLEN" ]
+if test "$len" -gt "$MAX_POSTLEN"
 then
-	pherror 'Post failed'
+	pherror "Post failed"
 	phline
 	phinfo "Comment too long ($len/$MAX_POSTLEN)"
-	phitem 1 'Return to thread' "$CHAN_ROOT/$id"
+	phitem 1 "Return to thread" "$CHAN_ROOT/$id"
+	exit 1
+fi
+
+if ! sh ../cooldown.sh post
+then
+	pherror "Post failed"
+	phline
+	phinfo "Please wait $POST_LIMIT seconds before posting again."
+	phitem 1 "Return to thread" "$CHAN_ROOT/$id"
 	exit 1
 fi
 
@@ -57,16 +67,16 @@ then
 	targetno=$(echo "$comment" | sed -r 's/>>([0-9]+) ?.*/\1/')
 	target=$(find .. -name "[0-9]*_$targetno" | head -n 1)
 
-	if [ ! -e "$target" ]
+	if ! test -e "$target"
 	then
 		pherror "Post #$targetno does not exist."
-		phitem 1 'Return to thread' "$CHAN_ROOT/$id"
+		phitem 1 "Return to thread" "$CHAN_ROOT/$id"
 		exit 1
 	fi
 
 	thread=$(echo "$target" | cut -d / -f 2)
 
-	if [ "$thread" = "$id" ]
+	if test "$thread" = "$id"
 	then
 		echo "#$targetno said:" >> $post
 	else
@@ -96,9 +106,9 @@ fi
 
 echo "$comment" >> $post
 
-if [ -e $post ]
+if test -e "$post"
 then
-	phinfo 'Post successful!'
+	phinfo "Post successful!"
 
 	echo $no > ../posts
 
@@ -114,7 +124,7 @@ then
 		sh updaterss.sh $id $no "$comment"
 	fi
 else
-	pherror 'Could not post.'
+	pherror "Could not post."
 fi
 
-phitem 1 'Return to thread' "$CHAN_ROOT/$id"
+phitem 1 "Return to thread" "$CHAN_ROOT/$id"

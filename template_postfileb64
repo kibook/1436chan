@@ -14,6 +14,8 @@ fi
 
 source ../params.sh
 
+id=$(basename $(pwd))
+
 if [[ "$MAX_POSTS" -gt 0 && $(ls [0-9]* 2>/dev/null | wc -l) -ge $MAX_POSTS ]]
 then
 	printf "3Post failed.	fake	(NULL)	0\r\n"
@@ -28,8 +30,6 @@ then
 	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
 	exit 1
 fi
-
-id=$(basename $(pwd))
 
 stamp=$(date +%s)
 
@@ -71,6 +71,15 @@ if [ $size -gt $MAX_UPLOAD ]
 then
 	printf "3File too large (max $MAX_UPLOAD bytes)	fake	(NULL)	0\r\n"
 	printf "1Return to thread	$CHAN_ROOT/$id	$SERVER_HOST	$SERVER_PORT\r\n"
+	exit 1
+fi
+
+if ! sh ../cooldown.sh post
+then
+	pherror "Post failed"
+	phline
+	phinfo "Please wait $POST_LIMIT seconds before posting again."
+	phitem 1 "Return to thread" "$CHAN_ROOT/$id"
 	exit 1
 fi
 

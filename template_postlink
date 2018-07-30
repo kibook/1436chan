@@ -40,6 +40,15 @@ then
 	exit 1
 fi
 
+if ! sh ../cooldown.sh post
+then
+	pherror "Post failed"
+	phline
+	phinfo "Please wait $POST_LIMIT seconds before posting again."
+	phitem 1 "Return to thread" "$CHAN_ROOT/$id"
+	exit 1
+fi
+
 proto=$(echo "$url" | sed -r 's/^([^:]+):\/\/.+$/\1/')
 uri=$(echo "$url" | sed -r 's/^[^:]+:\/\/(.+)$/\1/')
 
