@@ -6,7 +6,8 @@ cd $(dirname "$0")
 
 . ./params.sh
 
-comment=$(echo "$@" | cut -c1-$MAX_TITLELEN)
+comment="$@"
+len=$(echo -n "$comment" | wc -c)
 
 if [ -e threads ]
 then
@@ -18,6 +19,15 @@ no=$(($no + 1))
 
 stamp=$(date +%s)
 post=$no
+
+if [ "$len" -gt "$MAX_TITLELEN" ]
+then
+	pherror 'Thread creation failed.'
+	phline
+	phinfo "Title too long ($len/$MAX_TITLELEN)"
+	phitem 1 'Return' "$CHAN_ROOT"
+	exit 1
+fi
 
 if [ "$MAX_THREADS" -lt 1 ]
 then
