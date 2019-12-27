@@ -24,6 +24,11 @@ touch $thread/$post
 vi $thread/$post
 sh updatepostcache.sh $thread $post >> $thread/postcache
 
+if test "$MAX_RSS_ITEMS" -gt 0
+then
+	sh updaterss.sh $id $no "$(cat $thread/$post)"
+fi
+
 echo $no > posts
 
 sh updatethreadcache.sh > threadcache
