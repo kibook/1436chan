@@ -39,8 +39,21 @@ do
 		stamp=$(echo "$post" | cut -d _ -f 1)
 		no=$(echo "$post" | cut -d _ -f 2)
 		posted=$(date -d @$stamp +"$DATE_FORMAT")
+		tripcode=$(grep -E "^${no} .*$" ../tripcodes | sed -r 's/^[0-9]+ (.*)$/\1/')
+		postid=$(grep -E "^${no} .*$" ../postids | sed -r 's/^[0-9]+ (.*)$/\1/')
 
-		header=$(printf "__[%s #%d]%s" "$posted" $no "$pad" | cut -c1-70)
+		if test -n "$tripcode" -a -n "$postid"
+		then
+			header=$(printf "__[%s #%d !%s ID: %s]%s" "$posted" "$no" "$tripcode" "$postid" "$pad" | cut -c1-70)
+		elif test -n "$tripcode"
+		then
+			header=$(printf "__[%s #%d !%s]%s" "$posted" "$no" "$tripcode" "$pad" | cut -c1-70)
+		elif test -n "$postid"
+		then
+			header=$(printf "__[%s #%d ID: %s]%s" "$posted" "$no" "$postid" "$pad" | cut -c1-70)
+		else
+			header=$(printf "__[%s #%d]%s" "$posted" $no "$pad" | cut -c1-70)
+		fi
 		phinfo "$header"
 
 		saveifs="$IFS"

@@ -139,6 +139,23 @@ mv "$fname" $id/
 
 cd $id
 
+# post id
+if test "$ENABLE_POST_IDS" = y
+then
+	postid=$(sh ../tripcode.sh "$DATA_DIR" "$REMOTE_HOST")
+	echo "${no} ${postid}" >> ../postids
+fi
+
+# tripcode
+TRIPCODE_REGEX='^!([^ ]+) (.*)$'
+if echo "$disp" | grep -Eq "$TRIPCODE_REGEX"
+then
+	password=$(echo "$disp" | sed -r "s/${TRIPCODE_REGEX}/\1/")
+	tripcode=$(sh ../tripcode.sh "$DATA_DIR" "$password")
+	disp=$(echo "$disp" | sed -r "s/${TRIPCODE_REGEX}/\2/")
+	echo "${no} ${tripcode}" >> ../tripcodes
+fi
+
 # quotes
 targetno=$(echo "$disp" | sed -r 's/>>([0-9]+) ?.*/\1/')
 if  [[ "$disp" == ">>"* && "$targetno" -gt 0 ]]

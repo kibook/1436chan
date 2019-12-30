@@ -130,6 +130,10 @@ _____________________________________________________________________
         Number of seconds of cooldown time between posting/creating
         new threads. Set to 0 to disable this feature.
 
+    ENABLE_POST_IDS
+        Either 'y' or 'n'. If 'y', posts are given a post ID based
+        on the IP address of the poster.
+
 
 ADMINISTRATOR UTILITY
 _____________________________________________________________________
