@@ -63,7 +63,7 @@ fi
 # post id
 if test "$ENABLE_POST_IDS" = y
 then
-	postid=$(sh ../tripcode.sh "$DATA_DIR" "$REMOTE_HOST")
+	postid=$(sh ../tripcode.sh "$SALT_DIR" "$REMOTE_HOST")
 	echo "${no} ${postid}" >> ../postids
 fi
 
@@ -72,7 +72,7 @@ TRIPCODE_REGEX='^!([^ ]+) (.*)$'
 if echo "$dis" | grep -Eq "$TRIPCODE_REGEX"
 then
 	password=$(echo "$dis" | sed -r "s/${TRIPCODE_REGEX}/\1/")
-	tripcode=$(sh ../tripcode.sh "$DATA_DIR" "$password")
+	tripcode=$(sh ../tripcode.sh "$SALT_DIR" "$password")
 	dis=$(echo "$dis" | sed -r "s/${TRIPCODE_REGEX}/\2/")
 	echo "${no} ${tripcode}" >> ../tripcodes
 fi

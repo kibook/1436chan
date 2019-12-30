@@ -20,6 +20,7 @@ then
 	DEFAULT_DELETE_TIME=$DELETE_TIME
 	DEFAULT_MAX_RSS_ITEMS=$MAX_RSS_ITEMS
 	DEFAULT_POST_LIMIT=$POST_LIMIT
+	DEFAULT_SALT_DIR=$SALT_DIR
 	DEFAULT_ENABLE_POST_IDS=$ENABLE_POST_IDS
 else
 	DEFAULT_SERVER_HOST=localhost
@@ -39,6 +40,7 @@ else
 	DEFAULT_DELETE_TIME=600
 	DEFAULT_MAX_RSS_ITEMS=10
 	DEFAULT_POST_LIMIT=30
+	DEFAULT_SALT_DIR=/var/1436chan/salts
 	DEFAULT_ENABLE_POST_IDS=n
 fi
 
@@ -69,6 +71,7 @@ then
 	read -p "Time limit to delete posts [$DEFAULT_DELETE_TIME]: " DELETE_TIME
 	read -p "Max RSS items [$DEFAULT_MAX_RSS_ITEMS]: " MAX_RSS_ITEMS
 	read -p "Post cooldown [$DEFAULT_POST_LIMIT]: " POST_LIMIT
+	read -p "Salt directory [$DEFAULT_SALT_DIR]: " SALT_DIR
 	read -p "Enable post IDs? (y/n) [$DEFAULT_ENABLE_POST_IDS]: " ENABLE_POST_IDS
 fi
 
@@ -89,6 +92,7 @@ if [ -z "$DATA_DIR" ]; then DATA_DIR=$DEFAULT_DATA_DIR; fi
 if [ -z "$DELETE_TIME" ]; then DELETE_TIME=$DEFAULT_DELETE_TIME; fi
 if [ -z "$MAX_RSS_ITEMS" ]; then MAX_RSS_ITEMS=$DEFAULT_MAX_RSS_ITEMS; fi
 if [ -z "$POST_LIMIT" ]; then POST_LIMIT=$DEFAULT_POST_LIMIT; fi
+if [ -z "$SALT_DIR" ]; then SALT_DIR=$DEFAULT_SALT_DIR; fi
 if [ -z "$ENABLE_POST_IDS" ]; then ENABLE_POST_IDS=$DEFAULT_ENABLE_POST_IDS; fi
 
 echo "SERVER_HOST=$SERVER_HOST" > params.sh
@@ -108,6 +112,7 @@ echo "DATA_DIR=$DATA_DIR" >> params.sh
 echo "DELETE_TIME=$DELETE_TIME" >> params.sh
 echo "MAX_RSS_ITEMS=$MAX_RSS_ITEMS" >> params.sh
 echo "POST_LIMIT=$POST_LIMIT" >> params.sh
+echo "SALT_DIR=$SALT_DIR" >> params.sh
 echo "ENABLE_POST_IDS=$ENABLE_POST_IDS" >> params.sh
 
 # root permissions
@@ -141,9 +146,13 @@ then
 	touch "$DATA_DIR/postcooldown"
 	touch "$DATA_DIR/threadcooldown"
 fi
-mkdir -p "$DATA_DIR/salts"
 chmod -Rf g+w "$DATA_DIR"
 chmod -f g+s "$DATA_DIR"
+
+# setup salt directory
+mkdir -p "$SALT_DIR"
+chmod -Rf g+w "$SALT_DIR"
+chmod -f g+s "$SALT_DIR"
 
 # thread permissions
 chmod -f g+w template_*

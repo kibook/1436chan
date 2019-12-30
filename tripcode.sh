@@ -1,6 +1,6 @@
 #!/bin/sh
 
-DATA_DIR=$1
+SALT_DIR=$1
 PASS=$2
 
 generate_salt() {
@@ -9,12 +9,12 @@ generate_salt() {
 
 HASH=$(printf '%s' "$PASS" | sha256sum | cut -d ' ' -f 1)
 
-if test -e "${DATA_DIR}/salts/${HASH}"
+if test -e "${SALT_DIR}/${HASH}"
 then
-	read SALT < "${DATA_DIR}/salts/${HASH}"
+	read SALT < "${SALT_DIR}/${HASH}"
 else
 	SALT=$(generate_salt)
-	echo "$SALT" > "${DATA_DIR}/salts/${HASH}"
+	echo "$SALT" > "${SALT_DIR}/${HASH}"
 fi
 
 printf '%s' "${PASS}${SALT}" | sha256sum | cut -c 1-10
