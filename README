@@ -47,12 +47,12 @@ _____________________________________________________________________
     each of these options means:
 
     SERVER_HOST
-    	This is the hostname of the Gopher server that the board is
-	running on.
+      This is the hostname of the Gopher server that the board is
+      running on.
 
     SERVER_PORT
-    	This is the port of the Gopher server that the board is
-	running on.
+      This is the port of the Gopher server that the board is
+      running on.
 
     CHAN_ROOT
         This is the root selector of your board.
@@ -69,9 +69,9 @@ _____________________________________________________________________
 
     MAX_POSTS
         The maximum number of posts allowed in a thread. When
-	MAX_POSTS posts already exist, users will be unable to
-	add more posts to a thread. If this is 0, there is no
-	limit to the number of posts allowed.
+        MAX_POSTS posts already exist, users will be unable to
+        add more posts to a thread. If this is 0, there is no
+        limit to the number of posts allowed.
 
     MAX_POSTLEN
         The maximum characters allowed in a post. Additional
@@ -79,9 +79,9 @@ _____________________________________________________________________
 
     ENABLE_ARCHIVE
         Either 'y' or 'n'. If 'y', then old threads are preserved
-	instead of deleted when MAX_THREADS is reached. They will
-	be listed in a special "Archive" section instead of the
-	main menu. Otherwise, old threads are permanently deleted.
+        instead of deleted when MAX_THREADS is reached. They will
+        be listed in a special "Archive" section instead of the
+        main menu. Otherwise, old threads are permanently deleted.
 
     DATE_FORMAT
         The format for displaying the date on posts and threads.
@@ -102,33 +102,40 @@ _____________________________________________________________________
         to the respective thread directory and then posts a link
         to it in said thread.
 
-	If this is 0, then uploads are disabled.
+        If this is 0, then uploads are disabled.
 
-	[WARNING]: This means your server may connect to and download
-	from other arbitrary servers. If you are concerned about
-	what connections you make or what kinds of files you are
-	storing on your server, disable this!
+        [WARNING]: This means your server may connect to and download
+        from other arbitrary servers. If you are concerned about
+        what connections you make or what kinds of files you are
+        storing on your server, disable this!
 
     MAX_IMAGE
         Maximum dimensions of an uploaded image (WxH). Leave blank
-	to disable.
+        to disable.
 
     DATA_DIR
         Directory where extra data will be stored. Should be a
-	directory outside the gopher server root but with the same
-	permissions as CHAN_ROOT.
+        directory outside the gopher server root but with the same
+        permissions as CHAN_ROOT.
 
     DELETE_TIME
         Number of seconds within which a user may delete their own
-	post. Set to 0 to disable this feature.
+        post. Set to 0 to disable this feature.
 
     MAX_RSS_ITEMS
         Maximum number of feed items in the RSS feed. Set to 0 to
-	disable the RSS feed entirely.
+        disable the RSS feed entirely.
 
     POST_LIMIT
         Number of seconds of cooldown time between posting/creating
         new threads. Set to 0 to disable this feature.
+
+    SALT_DIR
+        Directory where salts used to generate tripcodes/post IDs
+        will be stored. Should be a directory outside the gopher
+        server root but with the same permissions as CHAN_ROOT.
+        Multiple boards may point to the same SALT_DIR to synchronize
+        tripcodes/post IDs across boards.
 
     ENABLE_POST_IDS
         Either 'y' or 'n'. If 'y', posts are given a post ID based
