@@ -70,7 +70,7 @@ then
 fi
 
 # tripcode
-TRIPCODE_REGEX='^!([^ ]+) (.*)$'
+TRIPCODE_REGEX='^##([^ ]+) (.*)$'
 if echo "$comment" | grep -Eq "$TRIPCODE_REGEX"
 then
 	password=$(echo "$comment" | sed -r "s/${TRIPCODE_REGEX}/\1/")

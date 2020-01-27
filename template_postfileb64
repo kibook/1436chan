@@ -147,7 +147,7 @@ then
 fi
 
 # tripcode
-TRIPCODE_REGEX='^!([^ ]+) (.*)$'
+TRIPCODE_REGEX='^##([^ ]+) (.*)$'
 if echo "$disp" | grep -Eq "$TRIPCODE_REGEX"
 then
 	password=$(echo "$disp" | sed -r "s/${TRIPCODE_REGEX}/\1/")
