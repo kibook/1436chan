@@ -20,8 +20,8 @@ do
 	stamp=$(echo "$file" | cut -d _ -f 1)
 	no=$(echo "$file" | cut -d _ -f 2)
 	posted=$(date -d @$stamp +"$DATE_FORMAT")
-	tripcode=$(grep -E "^${no} .*$" ../tripcodes | sed -r 's/^[0-9]+ (.*)$/\1/')
-	postid=$(grep -E "^${no} .*$" ../postids | sed -r 's/^[0-9]+ (.*)$/\1/')
+	tripcode=$(grep -E "^${no} .*$" ../tripcodes | head -n 1 | sed -r 's/^[0-9]+ (.*)$/\1/')
+	postid=$(grep -E "^${no} .*$" ../postids | head -n 1 | sed -r 's/^[0-9]+ (.*)$/\1/')
 
 	if test -n "$tripcode" -a -n "$postid"
 	then
