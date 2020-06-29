@@ -71,6 +71,17 @@ then
 	exit 1
 fi
 
+# Allowed protocols
+case "$proto" in
+	ftp|gopher|http|https) ;;
+	*)
+		pherror "Invalid protocol"
+		phinfo 'Supported protocols: ftp, gopher, http, https'
+		phitem 1 'Return to thread' "$CHAN_ROOT/$id"
+		exit 1
+		;;
+esac
+
 res=$(echo "$uri" | rev | cut -d / -f 1 | rev)
 ext=$(echo "$res" | rev | cut -d . -f 1 | rev)
 
