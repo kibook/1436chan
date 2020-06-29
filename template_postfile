@@ -8,6 +8,7 @@ if [ ! "$@" ]
 then
 	pherror 'Post failed: No URL specified.'
 	phitem 1 'Return to thread' "$CHAN_ROOT/$id"
+	exit 1
 fi
 
 if [ ! -e ../params.sh ]
@@ -17,16 +18,23 @@ fi
 
 . ../params.sh
 
-if [ "$MAX_POSTS" -gt 0 ] && [ $(ls [0-9]* 2>/dev/null | wc -l) -ge "$MAX_POSTS" ]
+if test "$REMOTE_FILE_UPLOAD" != y
 then
-	pherror "Post failed: Post limit reached ($MAX_POSTS)"
+	pherror 'Remote file uploads are disabled.'
 	phitem 1 'Return to thread' "$CHAN_ROOT/$id"
 	exit 1
 fi
 
-if [ "$MAX_UPLOAD" -le 0 ]
+if test "$MAX_UPLOAD" -le 0
 then
 	pherror 'Uploads are disabled.'
+	phitem 1 'Return to thread' "$CHAN_ROOT/$id"
+	exit 1
+fi
+
+if [ "$MAX_POSTS" -gt 0 ] && [ $(ls [0-9]* 2>/dev/null | wc -l) -ge "$MAX_POSTS" ]
+then
+	pherror "Post failed: Post limit reached ($MAX_POSTS)"
 	phitem 1 'Return to thread' "$CHAN_ROOT/$id"
 	exit 1
 fi

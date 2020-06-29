@@ -37,7 +37,7 @@ fi
 
 phitem 7 'Reply' "$REQUEST/post"
 phitem 7 'Reply with link' "$REQUEST/postlink"
-if [ "$MAX_UPLOAD" -gt 0 ]
+if test "$REMOTE_FILE_UPLOAD" = y -a "$MAX_UPLOAD" -gt 0
 then
 	phitem 7 "Upload image/file from URL (max $((MAX_UPLOAD / 1000)) kB)" "$REQUEST/postfile"
 fi

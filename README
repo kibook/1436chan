@@ -97,12 +97,14 @@ _____________________________________________________________________
 
     MAX_UPLOAD
         Maximum size of an upload in bytes. If this is > 0 then users
-        are allowed to reply with 'uploaded' files. The users must
-        actually provide a URL to a file which the server downloads
-        to the respective thread directory and then posts a link
-        to it in said thread.
+        are allowed to reply with 'uploaded' files.
 
         If this is 0, then uploads are disabled.
+
+    REMOTE_FILE_UPLOAD
+        Allow  users to provide a URL to a file which the server
+        downloads to the respective thread directory and then posts a
+        link to it in said thread.
 
         [WARNING]: This means your server may connect to and download
         from other arbitrary servers. If you are concerned about
